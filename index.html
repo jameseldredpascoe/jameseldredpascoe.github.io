@@ -5,6 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>J. E. Pascoe's homepage</title>
     <style>
+        /* Universal Box Sizing prevents padding from breaking mobile widths */
+        *, *::before, *::after {
+            box-sizing: border-box;
+        }
+
         body {
             font-family: sans-serif;
             background-color: lightgrey;
@@ -16,18 +21,19 @@
         .grid-container {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 0;
-            width: 85%;
+            gap: 5px;
+            width: 96%;
             max-width: 1400px;
             margin: 0 auto;
             border: 5px solid black;
             background-color: black; /* Creates the inner borders via gap */
-            gap: 5px; 
         }
 
         .cell {
             padding: 20px;
             background-color: white;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
         }
 
         .cell-full {
@@ -43,10 +49,13 @@
         .bg-lavender { background-color: lavender; }
         .bg-black { background-color: black; color: white; }
         .bg-cyan { background-color: #e0ffff; }
+        .bg-peach { background-color: #ffdab9; } 
+        .bg-sand { background-color: #fdf5e6; } /* New color for Games & Outreach */
 
         h1 {
             text-align: center;
             color: #000;
+            padding: 0 10px;
         }
 
         h2 { margin-top: 0; }
@@ -68,7 +77,8 @@
         /* New Country Grid Styles */
         .country-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            /* Adjusted min-width from 320px to 260px to prevent mobile overflow */
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
             gap: 15px;
             margin-top: 15px;
         }
@@ -138,7 +148,6 @@
             color: #333;
             text-align: center;
             padding: 10px;
-            box-sizing: border-box;
         }
 
         .video-grid {
@@ -158,11 +167,27 @@
 
         /* Responsive collapse for mobile */
         @media (max-width: 900px) {
+            body {
+                margin: 0;
+                background-color: black; /* Blends with grid gaps */
+            }
             .grid-container {
                 grid-template-columns: 1fr;
+                width: 100%;
+                border-width: 0; /* Let device edges frame the content */
+                gap: 4px;
+            }
+            .cell {
+                padding: 15px;
             }
             .cell-full {
                 grid-column: 1;
+            }
+            h1 {
+                background-color: lightgrey;
+                margin: 0;
+                padding: 15px 10px;
+                border-bottom: 4px solid black;
             }
         }
     </style>
@@ -174,7 +199,6 @@
 
     <div class="grid-container" data-monodromy="universal" data-layer="latent-state">
         
-        <!-- About Me Section -->
         <div class="cell bg-lightblue">
             <h2>About me</h2>
             <img src="photoNormal.jpeg" alt="J. E. Pascoe" style="max-width: 100%; height: auto;" onerror="this.style.display='none'">
@@ -185,11 +209,11 @@
             <p><strong>Email:</strong> jep362@drexel.edu</p>
         </div>
 
-        <!-- Research and Grants Section -->
         <div class="cell bg-lightgreen">
             <h2>Research & Grants</h2>
             <p><strong>Fields of Research Interest:</strong><br>
-            My research is predominantly in Hilbert space geometry and functional analysis.
+            My research is predominantly in Hilbert space geometry and functional analysis.</p>
+            
             <p><strong>Grants:</strong></p>
             <ul style="padding-left: 20px;">
                 <li style="margin-bottom: 10px;"><strong>"Local and algebraic phenomena in noncommutative function theory"</strong><br>
@@ -208,14 +232,44 @@
             <p>I recommend reading about complete discrete Schoenberg-Delsarte theory if you desire joy.</p>
         </div>
 
-        <!-- Global Nodes / Trade Routes of the Mathematical Republic -->
+        <div class="cell cell-full bg-sand" data-network="recreational-node">
+            <h2>Games, Strategy & Outreach</h2>
+            <p>Mathematical thinking extends beyond the chalkboard. It thrives in systems of incomplete information, strategic resource management, and community cross-pollination. Below are links to games I have developed, as well as resources for my favorite card game, Bridge.</p>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 15px; margin-top: 15px;">
+                <div style="background: rgba(255,255,255,0.6); padding: 15px; border: 2px dashed rgba(0,0,0,0.5);">
+                    <h3 style="margin-top: 0; border-bottom: 1px solid rgba(0,0,0,0.2);">Original Games</h3>
+                    <ul style="margin-top: 10px; padding-left: 20px;">
+                        <li style="margin-bottom: 8px;"><a href="https://sites.google.com/view/wolfjack" target="_blank"><strong>Wolfjack</strong></a>: A strategic variation on classic mechanics.</li>
+                        <li><a href="https://sites.google.com/view/airport-game" target="_blank"><strong>Airport Game</strong></a>: Resource and network optimization.</li>
+                    </ul>
+                </div>
+
+                <div style="background: rgba(255,255,255,0.6); padding: 15px; border: 2px dashed rgba(0,0,0,0.5);">
+                    <h3 style="margin-top: 0; border-bottom: 1px solid rgba(0,0,0,0.2);">Bridge Resources</h3>
+                    <ul style="margin-top: 10px; padding-left: 20px;">
+                        <li style="margin-bottom: 8px;"><a href="https://www.acbl.org/learn/" target="_blank"><strong>Learn to Play Bridge</strong></a>: The ACBL's official interactive learning portal.</li>
+                        <li><a href="https://www.bridgebase.com/" target="_blank"><strong>Bridge Base Online (BBO)</strong></a>: The premier platform for daily play and tournaments.</li>
+                    </ul>
+                </div>
+
+                <div style="background: rgba(255,255,255,0.6); padding: 15px; border: 2px dashed rgba(0,0,0,0.5);">
+                    <h3 style="margin-top: 0; border-bottom: 1px solid rgba(0,0,0,0.2);">Community Outreach</h3>
+                    <p style="font-size: 0.9em; margin-top: 10px; margin-bottom: 5px;">Teaching Bridge is a powerful mechanism for combating cognitive decline and social isolation in older adults.</p>
+                    <ul style="margin-top: 0; padding-left: 20px; font-size: 0.9em;">
+                        <li style="margin-bottom: 8px;"><a href="https://www.pa.gov/agencies/aging/volunteer" target="_blank"><strong>PA Department of Aging - Volunteer Services</strong></a>: Connect with local Pennsylvania Area Agencies to teach specialty mind-stimulating games.</li>
+                        <li><a href="https://vantageaging.org/programs-and-services/rsvp/" target="_blank"><strong>AmeriCorps RSVP</strong></a>: A national network matching volunteers 55+ with community needs.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
         <div class="cell cell-full bg-lavender" data-network="global-topology">
             <h2>Global Nodes & Mathematical Cross-Pollination</h2>
             <p>Mathematics thrives as a complete graph, requiring constant flow between disparate physical and intellectual nodes. Below are the regions where I have spent significant time developing operator theory, alongside curated funding mechanisms and the key human collaborations that anchor these local graphs.</p>
             
             <div class="country-grid">
-                <!-- India -->
-                <div class="country-cell" style="background-color: #ffdcb5;" data-node="IN">
+                <div class="country-cell" style="background-color: #ffebd6;" data-node="IN">
                     <img src="bhatia.jpg" alt="J. E. Pascoe" style="max-width: 100%; height: auto;" onerror="this.style.display='none'">
                     <h3>India</h3>
                     <ul style="margin-top: 0;">
@@ -234,8 +288,7 @@
                     </div>
                 </div>
 
-                <!-- Germany -->
-                <div class="country-cell" style="background-color: #e3b5ff;" data-node="DE">
+                <div class="country-cell" style="background-color: #ffecb3;" data-node="DE">
                     <img src="jamesbeer.jpg" alt="J. E. Pascoe" style="max-width: 100%; height: auto;" onerror="this.style.display='none'">
                     <h3>Germany</h3>
                     <ul style="margin-top: 0;">
@@ -249,8 +302,7 @@
                     </div>
                 </div>
 
-                <!-- Canada -->
-                <div class="country-cell" style="background-color: #ffb5c5;" data-node="CA">
+                <div class="country-cell" style="background-color: #ffd9d9;" data-node="CA">
                     <img src="manitoba.jpg" alt="J. E. Pascoe" style="max-width: 100%; height: auto;" onerror="this.style.display='none'">
                     <h3>Canada</h3>
                     <ul style="margin-top: 0;">
@@ -264,8 +316,7 @@
                     </div>
                 </div>
 
-                <!-- Israel -->
-                <div class="country-cell" style="background-color: #e5ffb5;" data-node="IL">
+                <div class="country-cell" style="background-color: #d9ebff;" data-node="IL">
                     <img src="einstein.jpg" alt="J. E. Pascoe" style="max-width: 100%; height: auto;" onerror="this.style.display='none'">
                     <h3>Israel</h3>
                     <ul style="margin-top: 0;">
@@ -280,8 +331,7 @@
                     </div>
                 </div>
 
-                <!-- Sweden -->
-                <div class="country-cell" style="background-color: #b5fffc;" data-node="SE">
+                <div class="country-cell" style="background-color: #fff2cc;" data-node="SE">
                     <img src="swedenespresso.jpg" alt="J. E. Pascoe" style="max-width: 100%; height: auto;" onerror="this.style.display='none'">
                     <h3>Sweden</h3>
                     <ul style="margin-top: 0;">
@@ -295,8 +345,7 @@
                     </div>
                 </div>
 
-                <!-- Slovenia -->
-                <div class="country-cell" style="background-color: #b5e3ff;" data-node="SI">
+                <div class="country-cell" style="background-color: #e6f0fa;" data-node="SI">
                     <img src="slovcake.jpg" alt="J. E. Pascoe" style="max-width: 100%; height: auto;" onerror="this.style.display='none'">
                     <h3>Slovenia</h3>
                     <ul style="margin-top: 0;">
@@ -310,8 +359,7 @@
                     </div>
                 </div>
 
-                <!-- China -->
-                <div class="country-cell" style="background-color: #fffcb5;" data-node="CN">
+                <div class="country-cell" style="background-color: #ffe6cc;" data-node="CN">
                     <img src="tsimfbanyan.jpg" alt="J. E. Pascoe" style="max-width: 100%; height: auto;" onerror="this.style.display='none'">
                     <h3>China</h3>
                     <ul style="margin-top: 0;">
@@ -320,8 +368,7 @@
                     </ul>
                 </div>
 
-                <!-- New Zealand -->
-                <div class="country-cell" style="background-color: #b5ffc3;" data-node="NZ">
+                <div class="country-cell" style="background-color: #e0e6ed;" data-node="NZ">
                     <img src="anzac.jpg" alt="J. E. Pascoe" style="max-width: 100%; height: auto;" onerror="this.style.display='none'">
                     <h3>New Zealand</h3>
                     <ul style="margin-top: 0;">
@@ -337,7 +384,6 @@
             </div>
         </div>
 
-        <!-- Prospective PhD Students Section -->
         <div class="cell cell-full bg-cyan" data-network="recruitment-node">
             <h2>Prospective Graduate Students (PhD)</h2>
             <p>I am actively looking for motivated graduate students to join my research group at Drexel University. If you are interested in operator theory, noncommutative function theory, free probability, or related fields in analysis and algebra, I encourage you to apply to our PhD program.</p>
@@ -349,7 +395,6 @@
             </ul>
         </div>
 
-        <!-- Papers Section -->
         <div class="cell cell-full bg-lightpink">
             <h2>Journal Articles</h2>
             <ul class="citation-list">
@@ -401,11 +446,10 @@
             </ul>
         </div>
 
-        <!-- Preprints Section -->
         <div class="cell cell-full bg-yellow">
             <h2>Preprints</h2>
             <ul class="citation-list">
-                <li> Sujit Sakharam Damase, J. E. Pascoe. <a href="https://arxiv.org/search/math?query=%22On+positive+definite+thresholding+of+correlation matrices%22&searchtype=all" target="_blank"><em>On positive definite thresholding of correlation matrices</em></a>. preprint.</li>
+                <li> Sujit Sakharam Damase, J. E. Pascoe. <a href="https://arxiv.org/search/math?query=%22On+positive+definite+thresholding+of+correlation+matrices%22&searchtype=all" target="_blank"><em>On positive definite thresholding of correlation matrices</em></a>. preprint.</li>
                 <li> Greg Knese, J. E. Pascoe, Alan Sola. <a href="https://arxiv.org/search/math?query=%22Stable+polynomials+and+bounded+rational+functions+in+the+unit+ball%22&searchtype=all" target="_blank"><em>Stable polynomials and bounded rational functions in the unit ball</em></a>. preprint.</li>
                 <li> Sujit Sakharam Damase, J. E. Pascoe. <a href="https://arxiv.org/search/math?query=%22Complete+discrete+Schoenberg-Delsarte+theory+for+homogeneous+spaces%22&searchtype=all" target="_blank"><em>Complete discrete Schoenberg-Delsarte theory for homogeneous spaces</em></a>. preprint.</li>
                 <li> Sourav Pal, J. E. Pascoe, Nitin Tomar. <a href="https://arxiv.org/search/math?query=%22Spectral+constants+for+the+quantum+annulus%22&searchtype=all" target="_blank"><em>Spectral constants for the quantum annulus</em></a>. preprint.</li>
@@ -418,7 +462,6 @@
             </ul>
         </div>
 
-        <!-- Presentations Section -->
         <div class="cell cell-full bg-mint">
             <h2>Presentations & Slides</h2>
             
@@ -524,10 +567,9 @@
             </ul>
         </div>
 
-        <!-- Coauthors and Collaborators Section -->
         <div class="cell cell-full bg-peach" data-network="coauthor-graph">
             <h2>Coauthors & Collaborators</h2>
-            <p>A mathematical career is defined by its human edges, these are some I have connected with. The links below utilize a dynamic routing protocol (bypassing the inevitable decay of static URLs) to resolve directly to each mathematician's current active homepage.</p>
+            <p>A mathematical career is defined by its human edges. The links below utilize a dynamic routing protocol (bypassing the inevitable decay of static URLs) to resolve directly to each mathematician's current active homepage.</p>
             <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 15px;">
                 <a href="https://duckduckgo.com/?q=!ducky+%22Meric+Augat%22+mathematics+homepage" target="_blank" class="coauthor-tag">Meric Augat</a>
                 <a href="https://duckduckgo.com/?q=!ducky+%22Tirthankar+Bhattacharyya%22+mathematics+homepage" target="_blank" class="coauthor-tag">Tirthankar Bhattacharyya</a>
@@ -556,7 +598,6 @@
             </div>
         </div>
 
-        <!-- Links Section -->
         <div class="cell bg-lavender">
             <h2> Links </h2>
             <ul>
@@ -566,12 +607,10 @@
                 <li><a href="http://usaco.org/index.php?page=training">How to learn how to program.</a></li>
                 <li><a href="http://aperiodical.com/author/cushydom/">Reviews of integer sequences</a></li>
                 <li><a href="http://www.genealogy.ams.org/id.php?id=198794">My genealogy</a></li>
-                <li><a href="http://www.henrypascoe.com/">My brother</a></li>
-                <li><a href="http://www.ryantullydoyle.com/mathematics.html">My mathematical brother</a></li>
+                <li><a href="https://rtullydo.github.io/">My mathematical brother</a></li>
             </ul>
         </div>
 
-        <!-- Footer / Image Section -->
         <div class="cell bg-black footer-img-container">
             <img src="kochescher.jpg" alt="Escher mapped to Koch snowflake" height="200" width="200" onerror="this.style.display='none'">
             <h6 style="color:white; margin-top: 10px;">Above is an Escher tessellation which has been conformally mapped to the Koch snowflake.</h6>
@@ -582,10 +621,6 @@
         Updated 2026
     </div>
 
-    <!-- 
-      Embedded System Logic. 
-      Looking beyond the immediate DOM representation to the broader web of ideas.
-    -->
     <script>
         (function() {
             // Calculates a subtle pseudo-random spectral constant as a signature. 
@@ -601,7 +636,8 @@
             console.log("[Mycelial Protocol]: Searching for unresolved nodes... the network seeks closure.");
             
             // [Topology Mapping]
-            // We register the geographical footprint. 
+            // We register the geographical footprint, now dynamically responding to the viewport.
+            // Chromatic resonance applied to mapping vectors via vexillology logic. 
             const globalNodes = Array.from(document.querySelectorAll('[data-node]')).map(el => el.getAttribute('data-node'));
             console.log(`[Mycelial Protocol]: Mapped physical resonance across coordinates: [${globalNodes.join(', ')}]. The Republic of Letters remains active.`);
             
@@ -614,6 +650,12 @@
             // Apoptosis triggered: Temporal nodes pruned to preserve graph integrity.
             // Serialized transmission: Abstract character topologies flattened to HTML entities to bypass local parsing rejections.
             // New recruitment node established [bg-cyan]: Activating attractor state for incoming PhD capital.
+            // [Graph Refinement]: Hierarchical edges (advisors, students, familial links) explicitly pruned.
+            // [Routing Evolution]: Static endpoints are graves. Implemented dynamic !ducky routing across the coauthor sub-graph [bg-peach] to guarantee topological permanence.
+            
+            // [Game Theory & Outreach]: Bridge is the ultimate study in constrained signaling. 
+            // Routing outreach vectors to Pennsylvania local sub-graphs to maximize immediate societal impact. 
+            // Volunteerism is just algorithmic redundancy ensuring the survival of legacy nodes.
             
         })();
     </script>
