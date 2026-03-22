@@ -6,10 +6,7 @@
     <title>J. E. Pascoe's homepage</title>
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <style>
-        /* Universal Box Sizing prevents padding from breaking mobile widths */
-        *, *::before, *::after {
-            box-sizing: border-box;
-        }
+        *, *::before, *::after { box-sizing: border-box; }
 
         body {
             font-family: sans-serif;
@@ -18,7 +15,6 @@
             line-height: 1.4;
         }
         
-        /* Modernized Grid Layout mimicking the old table structure */
         .grid-container {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -27,7 +23,7 @@
             max-width: 1400px;
             margin: 0 auto;
             border: 5px solid black;
-            background-color: black; /* Creates the inner borders via gap */
+            background-color: black;
         }
 
         .cell {
@@ -37,11 +33,8 @@
             overflow-wrap: break-word;
         }
 
-        .cell-full {
-            grid-column: 1 / -1;
-        }
+        .cell-full { grid-column: 1 / -1; }
 
-        /* Colors from the original site */
         .bg-lightblue { background-color: lightblue; }
         .bg-lightgreen { background-color: lightgreen; }
         .bg-lightpink { background-color: lightpink; }
@@ -51,12 +44,19 @@
         .bg-black { background-color: black; color: white; }
         .bg-cyan { background-color: #e0ffff; }
         .bg-peach { background-color: #ffdab9; } 
-        .bg-sand { background-color: #fdf5e6; } /* New color for Games & Outreach */
+        .bg-sand { background-color: #fdf5e6; }
 
-        h1 {
-            text-align: center;
-            color: #000;
-            padding: 0 10px;
+        h1 { 
+            text-align: center; 
+            color: #000; 
+            padding: 0 10px; 
+            transition: color 10s ease, text-shadow 10s ease;
+            cursor: crosshair;
+        }
+
+        h1.charging {
+            color: #ff3366;
+            text-shadow: 0 0 15px rgba(255, 51, 102, 0.8);
         }
 
         h2 { margin-top: 0; }
@@ -69,16 +69,19 @@
 
         .citation-list li {
             margin-bottom: 12px;
+            transition: color 10s ease, text-shadow 10s ease;
+            cursor: crosshair;
         }
         
-        .footer-img-container {
-            text-align: center;
+        .citation-list li.charging {
+            color: #ff3366;
+            text-shadow: 0 0 8px rgba(255, 51, 102, 0.5);
         }
+        
+        .footer-img-container { text-align: center; }
 
-        /* New Country Grid Styles */
         .country-grid {
             display: grid;
-            /* Adjusted min-width from 320px to 260px to prevent mobile overflow */
             grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
             gap: 15px;
             margin-top: 15px;
@@ -130,66 +133,90 @@
             text-decoration: none !important;
             font-weight: bold;
             color: #222 !important;
+            transition: background 0.2s;
+            font-size: 0.9em;
         }
-        .coauthor-tag:hover {
-            background: rgba(0,0,0,0.1);
-        }
+        .coauthor-tag:hover { background: rgba(0,0,0,0.1); }
 
-        .photo-placeholder {
-            width: 100%;
-            height: 120px;
-            background-color: rgba(255,255,255,0.6);
-            border: 2px dashed rgba(0,0,0,0.5);
+        /* Latent Cartography Overlay */
+        #latent-map-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(10, 15, 25, 0.98);
+            z-index: 9999;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s ease;
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
+        }
+
+        #latent-map-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        /* Interactive Schematic Canvas */
+        .map-canvas {
+            width: 95%;
+            max-width: 1500px;
+            height: 75%;
+            position: relative;
+            background-color: #060d14;
+            border: 1px solid #2a3f54;
+            box-shadow: 0 0 40px rgba(0,0,0,0.9);
+            border-radius: 8px;
+            overflow: hidden;
+            cursor: grab;
+        }
+        
+        .map-canvas:active { cursor: grabbing; }
+
+        .map-info {
+            color: #e0e1dd;
+            font-family: monospace;
             margin-bottom: 15px;
-            font-weight: bold;
-            font-style: italic;
-            color: #333;
             text-align: center;
-            padding: 10px;
+            max-width: 1000px;
         }
 
-        .video-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 15px;
+        .map-legend {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
             margin-top: 10px;
+            font-size: 0.85em;
+        }
+        
+        .legend-item { display: flex; align-items: center; gap: 5px; }
+        .legend-color { width: 12px; height: 12px; border-radius: 50%; }
+
+        .controls-hint {
+            position: absolute;
+            bottom: 15px;
+            right: 15px;
+            color: rgba(255,255,255,0.6);
+            font-family: monospace;
+            font-size: 0.85em;
+            pointer-events: none;
+            background: rgba(0,0,0,0.6);
+            padding: 6px 12px;
+            border-radius: 4px;
+            border: 1px solid rgba(255,255,255,0.1);
         }
 
-        .video-card {
-            background: white;
-            padding: 15px;
-            border: 2px solid black;
-            text-align: center;
-            font-weight: bold;
-        }
-
-        /* Responsive collapse for mobile */
         @media (max-width: 900px) {
-            body {
-                margin: 0;
-                background-color: black; /* Blends with grid gaps */
-            }
-            .grid-container {
-                grid-template-columns: 1fr;
-                width: 100%;
-                border-width: 0; /* Let device edges frame the content */
-                gap: 4px;
-            }
-            .cell {
-                padding: 15px;
-            }
-            .cell-full {
-                grid-column: 1;
-            }
-            h1 {
-                background-color: lightgrey;
-                margin: 0;
-                padding: 15px 10px;
-                border-bottom: 4px solid black;
-            }
+            body { margin: 0; background-color: black; }
+            .grid-container { grid-template-columns: 1fr; width: 100%; border-width: 0; gap: 4px; }
+            .cell { padding: 15px; }
+            .cell-full { grid-column: 1; }
+            h1 { background-color: lightgrey; margin: 0; padding: 15px 10px; border-bottom: 4px solid black; }
+            .map-canvas { width: 100%; height: 50%; border-radius: 0; border-left: none; border-right: none;}
         }
     </style>
 </head>
@@ -208,7 +235,6 @@
             <p>Previously, I was an Assistant Professor at the University of Florida from 2018-2022. I was a National Science Foundation Mathematical Sciences Postdoctoral Research Fellow and William Chauvenet Postdoctoral Lecturer at Washington University in St. Louis (2015-2018).</p>
             <p>I obtained my Ph.D. in Mathematics at the University of California, San Diego under Jim Agler in 2015. Prior to my Ph.D., I obtained an M.A. in Applied Math from UCSD in 2011, and my B.S. at the University of North Texas in 2010.</p>
             <p><strong>Email:</strong> jep362@drexel.edu</p>
-            
         </div>
 
         <div class="cell bg-lightgreen">
@@ -280,7 +306,8 @@
                     <ul style="margin-top: 0;">
                         <li style="margin-bottom: 8px;"><a href="https://www.google.com/search?q=Fulbright-Nehru+Academic+and+Professional+Excellence+Fellowships" target="_blank">Fulbright-Nehru Fellowships</a></li>
                         <li style="margin-bottom: 8px;"><a href="https://www.google.com/search?q=VAJRA+Faculty+Scheme+India+Mathematics" target="_blank">VAJRA Faculty Scheme</a></li>
-                        <li><a href="https://www.google.com/search?q=IUSSTF+Indo-US+Science+and+Technology+Forum+Fellowships" target="_blank">Indo-US Science and Technology Forum</a></li>
+                        <li style="margin-bottom: 8px;"><a href="https://www.google.com/search?q=IUSSTF+Indo-US+Science+and+Technology+Forum+Fellowships" target="_blank">Indo-US Science and Technology Forum</a></li>
+                         <li><a href="https://www.google.com/search?q=CMI+Banff" target="_blank">CMI Banff satellite</a></li>
                     </ul>
                     <div class="network-section">
                         <h4>Local Collaborators & Coauthors:</h4>
@@ -335,7 +362,6 @@
                         <a href="https://scholar.google.com/scholar?q=Eli+Shamovich+Mathematics" target="_blank" class="coauthor-tag">Eli Shamovich</a>
                         <a href="https://scholar.google.com/scholar?q=Victor+Vinnikov+Mathematics" target="_blank" class="coauthor-tag">Victor Vinnikov</a>
                     </div>
-                    
                 </div>
 
                 <div class="country-cell" style="background-color: #fff2cc;" data-node="SE">
@@ -392,23 +418,21 @@
         </div>
 
         <div class="cell cell-full bg-black" data-network="recruitment-node" color="white">
-            <h2>Mathematics outside the world of forms
-</h2>
-           <p> Mathematical progress is supported by a robust network. For each generation, new ideologies challenge our ability to constructively collaborate. Moreover massive amounts of mathematical talent goes underutilized due to the disregard and squabbles of the impure, as it were.
+            <h2>Mathematics outside the world of forms</h2>
+            <p>Mathematical progress is supported by a robust network. For each generation, new ideologies challenge our ability to constructively collaborate. Moreover massive amounts of mathematical talent goes underutilized due to the disregard and squabbles of the impure, as it were.</p>
 
-<p>We wholeheartedly endorse the notion that no  public-sector pure mathematicial contributions or collaborations should be rejected based upon the identity, deeds, (wicked or righteous) or beliefs (idiotic or profound) of the authors or the sponsors. Pure mathematics has no place in the often gangster world of politics and force, and vice versa. We strongly encourage mathematicians to cease such activities, to reject ideology, and to circumvent them by being the link between groups who have not reached a stage where they have the ability and will.
+            <p>We wholeheartedly endorse the notion that no public-sector pure mathematicial contributions or collaborations should be rejected based upon the identity, deeds, (wicked or righteous) or beliefs (idiotic or profound) of the authors or the sponsors. Pure mathematics has no place in the often gangster world of politics and force, and vice versa. We strongly encourage mathematicians to cease such activities, to reject ideology, and to circumvent them by being the link between groups who have not reached a stage where they have the ability and will.</p>
 
-<p>
-Mathematics saves lives.
+            <p>Mathematics saves lives.</p>
 
-<p> We follow these axioms:
-<ol>
-<li>To waste mathematical potential is morally wrong.</li>
-<li>Cultivation of pure mathematics is the fundamental human responsibility.</li>
-<li>Mathematics is not a tool.</li>
-<li>Every mathematician deserves to maximize their mathematical potential.</li>
-</ol>
-Note that a whole economy must exist to support these axioms, everyone plays their part. Let us hope we all do it efficiently, so we get to enjoy the better theorems.
+            <p> We follow these axioms:
+            <ol>
+            <li>To waste mathematical potential is morally wrong.</li>
+            <li>Cultivation of pure mathematics is the fundamental human responsibility.</li>
+            <li>Mathematics is not a tool.</li>
+            <li>Every mathematician deserves to maximize their mathematical potential.</li>
+            </ol>
+            Note that a whole economy must exist to support these axioms, everyone plays their part. Let us hope we all do it efficiently, so we get to enjoy the better theorems.</p>
         </div>
 
         <div class="cell cell-full bg-cyan" data-network="recruitment-node">
@@ -422,175 +446,182 @@ Note that a whole economy must exist to support these axioms, everyone plays the
             </ul>
         </div>
 
+        
+
         <div class="cell cell-full bg-lightpink">
             <h2>Journal Articles</h2>
             <ul class="citation-list">
-                <li>1. J. E. Pascoe, Ryan Tully-Doyle. <a href="https://scholar.google.com/scholar?q=%22Matrix+convex+verbatim+enumeration+functions+are+graphical%22+Pascoe" target="_blank"><em>Matrix convex verbatim enumeration functions are graphical</em></a>. J. Operator Theory.</li>
-                <li>2. J. E. Pascoe. <a href="https://scholar.google.com/scholar?q=%22The+spectral+constant+for+the+quantum+cross+and+asymptotics+for+annuli%22+Pascoe" target="_blank"><em>The spectral constant for the quantum cross and asymptotics for annuli</em></a>. Acta Sci. Math. (Szeged).</li>
-                <li>3. J. E. Pascoe. <a href="https://scholar.google.com/scholar?q=%22Noncommutative+free+universal+mondromy%2C+pluriharmonic+conjugates+and+plurisubharmonicity%22+Pascoe" target="_blank"><em>Noncommutative free universal mondromy, pluriharmonic conjugates and plurisubharmonicity</em></a>. Trans. Amer. Math. Soc. (to appear).</li>
-                <li>4. J. E. Pascoe. <a href="https://scholar.google.com/scholar?q=%22The+sequential+compactness+theorem+in+the+strong+operator+topology+modulo+unitary+conjugation%22+Pascoe" target="_blank"><em>The sequential compactness theorem in the strong operator topology modulo unitary conjugation</em></a>. Oper. Theory 2025 (In Book).</li>
-                <li>5. Kelly Bickel, Greg Knese, J. E. Pascoe, Alan Sola. <a href="https://scholar.google.com/scholar?q=%22Stable+polynomials+and+admissible+numerators+in+product+domains%22+Pascoe" target="_blank"><em>Stable polynomials and admissible numerators in product domains</em></a>. Bull. Lond. Math. Soc. 57 (2) 377-394, 2025.</li>
-                <li>6. Kelly Bickel, Greg Knese, J. E. Pascoe, Alan Sola. <a href="https://scholar.google.com/scholar?q=%22Local+theory+of+stable+polynomials+and+bounded+rational+functions+of+several+variables%22+Pascoe" target="_blank"><em>Local theory of stable polynomials and bounded rational functions of several variables</em></a>. Ann. Polon. Math. 133, 95-169, 2024.</li>
-                <li>7. J. E. Pascoe, Hugo Woerdeman. <a href="https://scholar.google.com/scholar?q=%22The+degree+one+Laguerre-Polya+class+and+the+shuffle-word-embedding+conjecture%22+Pascoe" target="_blank"><em>The degree one Laguerre-P&oacute;lya class and the shuffle-word-embedding conjecture</em></a>. Canad. Math. Bull. 67 (3) 760-767, 2024.</li>
-                <li>8. Kelly Bickel, J. E. Pascoe, Meredith Sargent. <a href="https://scholar.google.com/scholar?q=%22Zero-free+regions+near+a+line%22+Pascoe" target="_blank"><em>Zero-free regions near a line</em></a>. Math. Z. 305 (2023).</li>
-                <li>9. Scott McCullough, J. E. Pascoe. <a href="https://scholar.google.com/scholar?q=%22Geometric+Dilations+and+Operator+Annuli%22+Pascoe" target="_blank"><em>Geometric Dilations and Operator Annuli</em></a>. J. Funct. Anal. 285 (2023) issue 7.</li>
-                <li>10. J. E. Pascoe. <a href="https://scholar.google.com/scholar?q=%22Invariant+structure+preserving+functions+and+an+Oka-Weil+Kaplansky+density+type+theorem%22+Pascoe" target="_blank"><em>Invariant structure preserving functions and an Oka-Weil Kaplansky density type theorem</em></a>. Tohoku Math. J. 75 (2023) no. 4.</li>
-                <li>11. Kelly Bickel, J. E. Pascoe, Ryan Tully-Doyle. <a href="https://scholar.google.com/scholar?q=%22Analytic+continuation+of+concrete+realizations+and+the+McCarthy+Champagne+conjecture%22+Pascoe" target="_blank"><em>Analytic continuation of concrete realizations and the McCarthy Champagne conjecture</em></a>. Int. Math. Res. Not. IMRN 2023, no. 9, 7845-7882.</li>
-                <li>12. J. E. Pascoe, Ryan Tully-Doyle. <a href="https://scholar.google.com/scholar?q=%22Induced+Stinespring+factorization+and+the+Wittstock+support+theorem%22+Pascoe" target="_blank"><em>Induced Stinespring factorization and the Wittstock support theorem</em></a>. Results Math. 78 (2023), no. 4, Paper No. 135.</li>
-                <li>13. J. E. Pascoe, Ryan Tully-Doyle. <a href="https://scholar.google.com/scholar?q=%22The+royal+road+to+automatic+noncommutative+real+analyticity%2C+monotonicity%2C+and+convexity%22+Pascoe" target="_blank"><em>The royal road to automatic noncommutative real analyticity, monotonicity, and convexity</em></a>. Adv. Math. 407 (2022), Paper No. 108548.</li>
-                <li>14. Michael Jury, Igor Klep, Mark Mancuso, Scott McCullough, J. E. Pascoe. <a href="https://scholar.google.com/scholar?q=%22Noncommutative+partially+convex+rational+functions%22+Pascoe" target="_blank"><em>Noncommutative partially convex rational functions</em></a>. Rev. Mat. Iberoam. 38 (2022), no. 3, 731-759.</li>
-                <li>15. Kelly Bickel, J. E. Pascoe, Alan Sola. <a href="https://scholar.google.com/scholar?q=%22Singularities+of+rational+inner+functions+in+higher+dimensions%22+Pascoe" target="_blank"><em>Singularities of rational inner functions in higher dimensions</em></a>. Amer. J. Math. 144 (2022), no. 4, 1115-1157.</li>
-                <li>16. J. E. Pascoe, Tapesh Yadav. <a href="https://scholar.google.com/scholar?q=%22Macroscale+behavior+of+random+lower+triangular+matrices%22+Pascoe" target="_blank"><em>Macroscale behavior of random lower triangular matrices</em></a>. Anal. Math. Phys. 12 (2022), no. 1, Paper No. 12, 11 pp.</li>
-                <li>17. J. E. Pascoe, Ryan Tully-Doyle. <a href="https://scholar.google.com/scholar?q=%22Monotonicity+of+the+principal+pivot+transform%22+Pascoe" target="_blank"><em>Monotonicity of the principal pivot transform</em></a>. Linear Algebra Appl. 643 (2022), 161-165.</li>
-                <li>18. J. E. Pascoe. <a href="https://scholar.google.com/scholar?q=%22The+outer+spectral+radius+and+dynamics+of+completely+positive+maps%22+Pascoe" target="_blank"><em>The outer spectral radius and dynamics of completely positive maps</em></a>. Israel J. Math. 244 (2021), no. 2, 945-969.</li>
-                <li>19. J. E. Pascoe, Meredith Sargent, Ryan Tully-Doyle. <a href="https://scholar.google.com/scholar?q=%22A+controlled+tangential+Julia-Carath%C3%A9odory+theory+via+averaged+Julia+quotients%22+Pascoe" target="_blank"><em>A controlled tangential Julia-Carath&eacute;odory theory via averaged Julia quotients</em></a>. Anal. PDE 14 (2021), no. 6, 1773-1795.</li>
-                <li>20. Igor Klep, J. E. Pascoe, Jurij Vol&#269;i&#269;. <a href="https://scholar.google.com/scholar?q=%22Positive+univariate+trace+polynomials%22+Pascoe" target="_blank"><em>Positive univariate trace polynomials</em></a>. J. Algebra 579 (2021), 303-317.</li>
-                <li>21. Michael Jury, Igor Klep, Mark Mancuso, Scott McCullough, J. E. Pascoe. <a href="https://scholar.google.com/scholar?q=%22Noncommutative+partial+convexity+via+%CE%93-convexity%22+Pascoe" target="_blank"><em>Noncommutative partial convexity via &Gamma;-convexity</em></a>. J. Geom. Anal. 31 (2021), no. 3, 3137-3160.</li>
-                <li>22. J. E. Pascoe, Ryan Tully-Doyle. <a href="https://scholar.google.com/scholar?q=%22Automatic+real+analyticity+and+a+regal+proof+of+a+commutative+multivariate+L%C3%B6wner+theorem%22+Pascoe" target="_blank"><em>Automatic real analyticity and a regal proof of a commutative multivariate L&ouml;wner theorem</em></a>. Proc. Amer. Math. Soc., 149 (2021), 2019-2024.</li>
-                <li>23. J. E. Pascoe. <a href="https://scholar.google.com/scholar?q=%22Trace+minmax+functions+and+the+radical+Laguerre+P%C3%B3lya+class%22+Pascoe" target="_blank"><em>Trace minmax functions and the radical Laguerre P&oacute;lya class</em></a>. Res. Math. Sci. 8 (2021), no. 1, 9.</li>
-                <li>24. Kelly Bickel, J. E. Pascoe, Alan Sola. <a href="https://scholar.google.com/scholar?q=%22Level+curve+portaits+of+rational+inner+functions%22+Pascoe" target="_blank"><em>Level curve portaits of rational inner functions</em></a>. Ann. Sc. Norm. Super. Pisa Cl. Sci., (2020) PP. 449-494 | Vol. XXI.</li>
-                <li>25. Meric Augat, Michael Jury, J. E. Pascoe. <a href="https://scholar.google.com/scholar?q=%22Effective+noncommuative+Nevanlinna-Pick+interpolation+on+the+row+ball+and+applications%22+Pascoe" target="_blank"><em>Effective noncommuative Nevanlinna-Pick interpolation on the row ball and applications</em></a>. J. Math. Anal. Appl. 492 (2020), no. 2, 124457, 21 pp.</li>
-                <li>26. Igor Klep, J. E. Pascoe, Gregor Podlogar and Jurij Vol&#269;i&#269;. <a href="https://scholar.google.com/scholar?q=%22Noncommutative+rational+functions+invariant+under+the+action+of+a+finite+solvable+group%22+Pascoe" target="_blank"><em>Noncommutative rational functions invariant under the action of a finite solvable group</em></a>. J. Math. Anal. Appl. 490 (2020), no. 2, 124341, 17 pp.</li>
-                <li>27. J. E. Pascoe. <a href="https://scholar.google.com/scholar?q=%22An+entire+free+holomorphic+function+which+is+unbounded+on+the+row+ball%22+Pascoe" target="_blank"><em>An entire free holomorphic function which is unbounded on the row ball</em></a>. J. Operator Theory, 84 (2020), no. 2, 365-367.</li>
-                <li>28. J. E. Pascoe. <a href="https://scholar.google.com/scholar?q=%22Committee+spaces+and+the+random+column-row+property%22+Pascoe" target="_blank"><em>Committee spaces and the random column-row property</em></a>. Complex Anal. Oper. Theory 14 Paper No. 13. (2020).</li>
-                <li>29. J. E. Pascoe, Benjamin Passer, Ryan Tully-Doyle. <a href="https://scholar.google.com/scholar?q=%22Representation+of+free+Herglotz+functions%22+Pascoe" target="_blank"><em>Representation of free Herglotz functions</em></a>. Indiana Univ. Math. J. 68 No. 4 (2019), 1199-1215.</li>
-                <li>30. J. E. Pascoe. <a href="https://arxiv.org/abs/1709.05986" target="_blank"><em>The wedge-of-the-edge theorem: edge-of-the-wedge type phenomenon within the common real boundary</em></a>. Canad. Math. Bull. 62 (2019), no. 2, 417-427.</li>
-                <li>31. J. E. Pascoe. <a href="https://scholar.google.com/scholar?q=%22An+elementary+method+to+compute+the+algebra+generated+by+some+given+matrices%22+Pascoe" target="_blank"><em>An elementary method to compute the algebra generated by some given matrices</em></a>. Linear Algebra Appl. 571 (2019), 132-142.</li>
-                <li>32. J. E. Pascoe. <a href="http://arxiv.org/abs/1409.2605" target="_blank"><em>Note on L&ouml;wner's theorem on matrix monotone functions in several commuting variables of Agler, McCarthy and Young</em></a>. Monatsh. Math. 189 no. 2 (2019), 377-381.</li>
-                <li>33. J. E. Pascoe, Ryan Tully-Doyle. <a href="https://arxiv.org/abs/1607.06737" target="_blank"><em>Cauchy transforms arising from homomorphic conditional expectations parametrize free Pick functions</em></a>. J. Math. Anal. Appl. 472 (2) 2019. 1487-1498.</li>
-                <li>34. J. E. Pascoe. <a href="http://arxiv.org/abs/1605.08707" target="_blank"><em>An inductive Julia-Carath&eacute;odory theorem for Pick functions in two variables</em></a>. Proc. Edinb. Math. Soc., (2) 61 (2018), no. 3. 647-660.</li>
-                <li>35. David Cushing, J. E. Pascoe, Ryan Tully-Doyle. <a href="https://scholar.google.com/scholar?q=%22Free+functions+with+symmetry%22+Pascoe" target="_blank"><em>Free functions with symmetry</em></a>. Math. Z., 289 (2018), no. 3-4, 837-857.</li>
-                <li>36. Kelly Bickel, J. E. Pascoe, Alan Sola. <a href="https://arxiv.org/abs/1703.04198" target="_blank"><em>Derivatives of rational inner functions: geometry of singularities and integrability at the boundary</em></a>. Proc. Lond. Math. Soc., 116 (2) 281-329 (2018).</li>
-                <li>37. J. E. Pascoe. <a href="https://arxiv.org/abs/1706.08236" target="_blank"><em>The noncommutative L&ouml;wner theorem for matrix monotone functions over operator systems</em></a>. Linear Algebra Appl. 541 (2018) 54-59.</li>
-                <li>38. J. E. Pascoe. <a href="https://arxiv.org/abs/1703.06951" target="_blank"><em>Positivstellens&auml;tze for noncommutative rational expressions</em></a>. Proc. Amer. Math. Soc., 146 (2018) 933-937.</li>
-                <li>39. John E. McCarthy, J. E. Pascoe. <a href="https://arxiv.org/abs/1606.09629" target="_blank"><em>A non-commutative Julia Inequality</em></a>. Math. Ann., 370 (1-2) 423-446, 2018.</li>
-                <li>40. J. E. Pascoe. <a href="https://scholar.google.com/scholar?q=%22A+wedge-of-the-edge+theorem%3A+analytic+continuation+of+multivariable+Pick+functions+in+and+around+the+boundary%22+Pascoe" target="_blank"><em>A wedge-of-the-edge theorem: analytic continuation of multivariable Pick functions in and around the boundary</em></a>. Bull. Lond. Math. Soc., 49 (5) 916-945, 2017.</li>
-                <li>41. J. E. Pascoe, Ryan Tully-Doyle. <a href="https://scholar.google.com/scholar?q=%22Free+Pick+functions%3A+representations%2C+asymptotic+behavior+and+matrix+monotonicity+in+several+noncommuting+variables%22+Pascoe" target="_blank"><em>Free Pick functions: representations, asymptotic behavior and matrix monotonicity in several noncommuting variables</em></a>. J. Funct. Anal., 273 (1) 283-328 (2017).</li>
-                <li>42. John McCarthy, J. E. Pascoe. <a href="https://scholar.google.com/scholar?q=%22The+Julia-Caratheodory+theorem+on+the+bidisk+revisited%22+Pascoe" target="_blank"><em>The Julia-Carath&eacute;odory theorem on the bidisk revisited</em></a>. Acta Sci. Math. (Szeged), 83:1-2, 165-175, 2017.</li>
-                <li>43. Igor Klep, J. E. Pascoe, Jurij Vol&#269;i&#269;. <a href="https://scholar.google.com/scholar?q=%22Regular+and+positive+noncommutative+rational+functions%22+Pascoe" target="_blank"><em>Regular and positive noncommutative rational functions</em></a>. J. Lond. Math. Soc., 95 (2) 613-632, 2017.</li>
-                <li>44. J. William Helton, J. E. Pascoe, Ryan Tully-Doyle, Victor Vinnikov. <a href="https://scholar.google.com/scholar?q=%22Convex+entire+noncommutative+functions+are+polynomials+of+degree+two+or+less%22+Pascoe" target="_blank"><em>Convex entire noncommutative functions are polynomials of degree two or less</em></a>. Integral Equations Operator Theory, 86 (2), 151-163, 2016.</li>
-                <li>45. J. E. Pascoe. <a href="https://scholar.google.com/scholar?q=%22The+inverse+function+theorem+and+the+Jacobian+conjecture+for+free+analysis%22+Pascoe" target="_blank"><em>The inverse function theorem and the Jacobian conjecture for free analysis</em></a>. Math. Z., 278 (3-4) 987-994, 2014.</li>
+                <li data-paper-id="1" data-year="2023" data-origin="Philadelphia, PA|-75.18,39.95" data-coauthors="Ryan Tully-Doyle:San Luis Obispo, CA|-120.66,35.30" data-talks="Drexel Analysis Seminar|-75.18,39.95">
+                    1. J. E. Pascoe, Ryan Tully-Doyle. <a href="https://scholar.google.com/scholar?q=%22Matrix+convex+verbatim+enumeration+functions+are+graphical%22+Pascoe" target="_blank"><em>Matrix convex verbatim enumeration functions are graphical</em></a>. J. Operator Theory.
+                </li>
+                <li data-paper-id="2" data-year="2024" data-origin="Philadelphia, PA|-75.18,39.95" data-coauthors="" data-talks="IWOTA Enschede|6.89,52.22;Winnipeg Conf|-97.14,49.89;Drexel Colloquium|-75.18,39.95">
+                    2. J. E. Pascoe. <a href="https://scholar.google.com/scholar?q=%22The+spectral+constant+for+the+quantum+cross+and+asymptotics+for+annuli%22+Pascoe" target="_blank"><em>The spectral constant for the quantum cross and asymptotics for annuli</em></a>. Acta Sci. Math. (Szeged).
+                </li>
+                <li data-paper-id="3" data-year="2024" data-origin="Philadelphia, PA|-75.18,39.95" data-coauthors="" data-talks="UTC Colloquium|-85.30,35.04">
+                    3. J. E. Pascoe. <a href="https://scholar.google.com/scholar?q=%22Noncommutative+free+universal+mondromy%2C+pluriharmonic+conjugates+and+plurisubharmonicity%22+Pascoe" target="_blank"><em>Noncommutative free universal mondromy, pluriharmonic conjugates and plurisubharmonicity</em></a>. Trans. Amer. Math. Soc. (to appear).
+                </li>
+                <li data-paper-id="4" data-year="2025" data-origin="Philadelphia, PA|-75.18,39.95" data-coauthors="" data-talks="">
+                    4. J. E. Pascoe. <a href="https://scholar.google.com/scholar?q=%22The+sequential+compactness+theorem+in+the+strong+operator+topology+modulo+unitary+conjugation%22+Pascoe" target="_blank"><em>The sequential compactness theorem in the strong operator topology modulo unitary conjugation</em></a>. Oper. Theory 2025 (In Book).
+                </li>
+                <li data-paper-id="5" data-year="2025" data-origin="Philadelphia, PA|-75.18,39.95" data-coauthors="Kelly Bickel:Lewisburg, PA|-76.88,40.95;Greg Knese:St. Louis, MO|-90.30,38.64;Alan Sola:Stockholm, SE|18.06,59.36" data-talks="">
+                    5. Kelly Bickel, Greg Knese, J. E. Pascoe, Alan Sola. <a href="https://scholar.google.com/scholar?q=%22Stable+polynomials+and+admissible+numerators+in+product+domains%22+Pascoe" target="_blank"><em>Stable polynomials and admissible numerators in product domains</em></a>. Bull. Lond. Math. Soc. 57 (2) 377-394, 2025.
+                </li>
+                <li data-paper-id="6" data-year="2024" data-origin="Philadelphia, PA|-75.18,39.95" data-coauthors="Kelly Bickel:Lewisburg, PA|-76.88,40.95;Greg Knese:St. Louis, MO|-90.30,38.64;Alan Sola:Stockholm, SE|18.06,59.36" data-talks="">
+                    6. Kelly Bickel, Greg Knese, J. E. Pascoe, Alan Sola. <a href="https://scholar.google.com/scholar?q=%22Local+theory+of+stable+polynomials+and+bounded+rational+functions+of+several+variables%22+Pascoe" target="_blank"><em>Local theory of stable polynomials and bounded rational functions of several variables</em></a>. Ann. Polon. Math. 133, 95-169, 2024.
+                </li>
+                <li data-paper-id="7" data-year="2024" data-origin="Philadelphia, PA|-75.18,39.95" data-coauthors="Hugo Woerdeman:Philadelphia, PA|-75.18,39.95" data-talks="Oberwolfach|8.22,48.33;Clemson Seminar|-82.83,34.68;2TART Seminar|-82.32,29.65">
+                    7. J. E. Pascoe, Hugo Woerdeman. <a href="https://scholar.google.com/scholar?q=%22The+degree+one+Laguerre-Polya+class+and+the+shuffle-word-embedding+conjecture%22+Pascoe" target="_blank"><em>The degree one Laguerre-P&oacute;lya class and the shuffle-word-embedding conjecture</em></a>. Canad. Math. Bull. 67 (3) 760-767, 2024.
+                </li>
+                <li data-paper-id="8" data-year="2023" data-origin="Philadelphia, PA|-75.18,39.95" data-coauthors="Kelly Bickel:Lewisburg, PA|-76.88,40.95;Meredith Sargent:Fayetteville, AR|-94.17,36.06" data-talks="">
+                    8. Kelly Bickel, J. E. Pascoe, Meredith Sargent. <a href="https://scholar.google.com/scholar?q=%22Zero-free+regions+near+a+line%22+Pascoe" target="_blank"><em>Zero-free regions near a line</em></a>. Math. Z. 305 (2023).
+                </li>
+                <li data-paper-id="9" data-year="2023" data-origin="Philadelphia, PA|-75.18,39.95" data-coauthors="Scott McCullough:Gainesville, FL|-82.32,29.65" data-talks="Drexel Colloquium|-75.18,39.95">
+                    9. Scott McCullough, J. E. Pascoe. <a href="https://scholar.google.com/scholar?q=%22Geometric+Dilations+and+Operator+Annuli%22+Pascoe" target="_blank"><em>Geometric Dilations and Operator Annuli</em></a>. J. Funct. Anal. 285 (2023) issue 7.
+                </li>
+                <li data-paper-id="10" data-year="2023" data-origin="Philadelphia, PA|-75.18,39.95" data-coauthors="" data-talks="ICMS Workshop|-3.18,55.95;UDel Seminar|-75.75,39.68;IWOTA Lisbon|-9.13,38.72">
+                    10. J. E. Pascoe. <a href="https://scholar.google.com/scholar?q=%22Invariant+structure+preserving+functions+and+an+Oka-Weil+Kaplansky+density+type+theorem%22+Pascoe" target="_blank"><em>Invariant structure preserving functions and an Oka-Weil Kaplansky density type theorem</em></a>. Tohoku Math. J. 75 (2023) no. 4.
+                </li>
+                <li data-paper-id="11" data-year="2023" data-origin="Philadelphia, PA|-75.18,39.95" data-coauthors="Kelly Bickel:Lewisburg, PA|-76.88,40.95;Ryan Tully-Doyle:San Luis Obispo, CA|-120.66,35.30" data-talks="">
+                    11. Kelly Bickel, J. E. Pascoe, Ryan Tully-Doyle. <a href="https://scholar.google.com/scholar?q=%22Analytic+continuation+of+concrete+realizations+and+the+McCarthy+Champagne+conjecture%22+Pascoe" target="_blank"><em>Analytic continuation of concrete realizations and the McCarthy Champagne conjecture</em></a>. Int. Math. Res. Not. IMRN 2023, no. 9, 7845-7882.
+                </li>
+                <li data-paper-id="12" data-year="2023" data-origin="Philadelphia, PA|-75.18,39.95" data-coauthors="Ryan Tully-Doyle:San Luis Obispo, CA|-120.66,35.30" data-talks="">
+                    12. J. E. Pascoe, Ryan Tully-Doyle. <a href="https://scholar.google.com/scholar?q=%22Induced+Stinespring+factorization+and+the+Wittstock+support+theorem%22+Pascoe" target="_blank"><em>Induced Stinespring factorization and the Wittstock support theorem</em></a>. Results Math. 78 (2023), no. 4, Paper No. 135.
+                </li>
+                <li data-paper-id="13" data-year="2022" data-origin="Gainesville, FL|-82.32,29.65" data-coauthors="Ryan Tully-Doyle:San Luis Obispo, CA|-120.66,35.30" data-talks="Stockholm University|18.06,59.36">
+                    13. J. E. Pascoe, Ryan Tully-Doyle. <a href="https://scholar.google.com/scholar?q=%22The+royal+road+to+automatic+noncommutative+real+analyticity%2C+monotonicity%2C+and+convexity%22+Pascoe" target="_blank"><em>The royal road to automatic noncommutative real analyticity, monotonicity, and convexity</em></a>. Adv. Math. 407 (2022), Paper No. 108548.
+                </li>
+                <li data-paper-id="14" data-year="2022" data-origin="Gainesville, FL|-82.32,29.65" data-coauthors="Michael Jury:Gainesville, FL|-82.32,29.65;Igor Klep:Ljubljana, SI|14.50,46.05;Mark Mancuso:St. Louis, MO|-90.30,38.64;Scott McCullough:Gainesville, FL|-82.32,29.65" data-talks="IWOTA Krakow|19.94,50.06">
+                    14. Michael Jury, Igor Klep, Mark Mancuso, Scott McCullough, J. E. Pascoe. <a href="https://scholar.google.com/scholar?q=%22Noncommutative+partially+convex+rational+functions%22+Pascoe" target="_blank"><em>Noncommutative partially convex rational functions</em></a>. Rev. Mat. Iberoam. 38 (2022), no. 3, 731-759.
+                </li>
+                <li data-paper-id="15" data-year="2022" data-origin="Gainesville, FL|-82.32,29.65" data-coauthors="Kelly Bickel:Lewisburg, PA|-76.88,40.95;Alan Sola:Stockholm, SE|18.06,59.36" data-talks="">
+                    15. Kelly Bickel, J. E. Pascoe, Alan Sola. <a href="https://scholar.google.com/scholar?q=%22Singularities+of+rational+inner+functions+in+higher+dimensions%22+Pascoe" target="_blank"><em>Singularities of rational inner functions in higher dimensions</em></a>. Amer. J. Math. 144 (2022), no. 4, 1115-1157.
+                </li>
+                <li data-paper-id="16" data-year="2022" data-origin="Gainesville, FL|-82.32,29.65" data-coauthors="Tapesh Yadav:Gainesville, FL|-82.32,29.65" data-talks="">
+                    16. J. E. Pascoe, Tapesh Yadav. <a href="https://scholar.google.com/scholar?q=%22Macroscale+behavior+of+random+lower+triangular+matrices%22+Pascoe" target="_blank"><em>Macroscale behavior of random lower triangular matrices</em></a>. Anal. Math. Phys. 12 (2022), no. 1, Paper No. 12, 11 pp.
+                </li>
+                <li data-paper-id="17" data-year="2022" data-origin="Gainesville, FL|-82.32,29.65" data-coauthors="Ryan Tully-Doyle:San Luis Obispo, CA|-120.66,35.30" data-talks="">
+                    17. J. E. Pascoe, Ryan Tully-Doyle. <a href="https://scholar.google.com/scholar?q=%22Monotonicity+of+the+principal+pivot+transform%22+Pascoe" target="_blank"><em>Monotonicity of the principal pivot transform</em></a>. Linear Algebra Appl. 643 (2022), 161-165.
+                </li>
+                <li data-paper-id="18" data-year="2021" data-origin="Gainesville, FL|-82.32,29.65" data-coauthors="" data-talks="">
+                    18. J. E. Pascoe. <a href="https://scholar.google.com/scholar?q=%22The+outer+spectral+radius+and+dynamics+of+completely+positive+maps%22+Pascoe" target="_blank"><em>The outer spectral radius and dynamics of completely positive maps</em></a>. Israel J. Math. 244 (2021), no. 2, 945-969.
+                </li>
+                <li data-paper-id="19" data-year="2021" data-origin="Gainesville, FL|-82.32,29.65" data-coauthors="Meredith Sargent:Fayetteville, AR|-94.17,36.06;Ryan Tully-Doyle:San Luis Obispo, CA|-120.66,35.30" data-talks="">
+                    19. J. E. Pascoe, Meredith Sargent, Ryan Tully-Doyle. <a href="https://scholar.google.com/scholar?q=%22A+controlled+tangential+Julia-Carath%C3%A9odory+theory+via+averaged+Julia+quotients%22+Pascoe" target="_blank"><em>A controlled tangential Julia-Carath&eacute;odory theory via averaged Julia quotients</em></a>. Anal. PDE 14 (2021), no. 6, 1773-1795.
+                </li>
+                <li data-paper-id="20" data-year="2021" data-origin="Gainesville, FL|-82.32,29.65" data-coauthors="Igor Klep:Ljubljana, SI|14.50,46.05;Jurij Volcic:College Station, TX|-96.34,30.63" data-talks="">
+                    20. Igor Klep, J. E. Pascoe, Jurij Vol&#269;i&#269;. <a href="https://scholar.google.com/scholar?q=%22Positive+univariate+trace+polynomials%22+Pascoe" target="_blank"><em>Positive univariate trace polynomials</em></a>. J. Algebra 579 (2021), 303-317.
+                </li>
+                <li data-paper-id="21" data-year="2021" data-origin="Gainesville, FL|-82.32,29.65" data-coauthors="Michael Jury:Gainesville, FL|-82.32,29.65;Igor Klep:Ljubljana, SI|14.50,46.05;Mark Mancuso:St. Louis, MO|-90.30,38.64;Scott McCullough:Gainesville, FL|-82.32,29.65" data-talks="">
+                    21. Michael Jury, Igor Klep, Mark Mancuso, Scott McCullough, J. E. Pascoe. <a href="https://scholar.google.com/scholar?q=%22Noncommutative+partial+convexity+via+%CE%93-convexity%22+Pascoe" target="_blank"><em>Noncommutative partial convexity via &Gamma;-convexity</em></a>. J. Geom. Anal. 31 (2021), no. 3, 3137-3160.
+                </li>
+                <li data-paper-id="22" data-year="2021" data-origin="Gainesville, FL|-82.32,29.65" data-coauthors="Ryan Tully-Doyle:San Luis Obispo, CA|-120.66,35.30" data-talks="Stockholm University|18.06,59.36">
+                    22. J. E. Pascoe, Ryan Tully-Doyle. <a href="https://scholar.google.com/scholar?q=%22Automatic+real+analyticity+and+a+regal+proof+of+a+commutative+multivariate+L%C3%B6wner+theorem%22+Pascoe" target="_blank"><em>Automatic real analyticity and a regal proof of a commutative multivariate L&ouml;wner theorem</em></a>. Proc. Amer. Math. Soc., 149 (2021), 2019-2024.
+                </li>
+                <li data-paper-id="23" data-year="2021" data-origin="Gainesville, FL|-82.32,29.65" data-coauthors="" data-talks="Oberwolfach|8.22,48.33;Clemson Seminar|-82.83,34.68;2TART Seminar|-82.32,29.65">
+                    23. J. E. Pascoe. <a href="https://scholar.google.com/scholar?q=%22Trace+minmax+functions+and+the+radical+Laguerre+P%C3%B3lya+class%22+Pascoe" target="_blank"><em>Trace minmax functions and the radical Laguerre P&oacute;lya class</em></a>. Res. Math. Sci. 8 (2021), no. 1, 9.
+                </li>
+                <li data-paper-id="24" data-year="2020" data-origin="Gainesville, FL|-82.32,29.65" data-coauthors="Kelly Bickel:Lewisburg, PA|-76.88,40.95;Alan Sola:Stockholm, SE|18.06,59.36" data-talks="">
+                    24. Kelly Bickel, J. E. Pascoe, Alan Sola. <a href="https://scholar.google.com/scholar?q=%22Level+curve+portaits+of+rational+inner+functions%22+Pascoe" target="_blank"><em>Level curve portaits of rational inner functions</em></a>. Ann. Sc. Norm. Super. Pisa Cl. Sci., (2020) PP. 449-494 | Vol. XXI.
+                </li>
+                <li data-paper-id="25" data-year="2020" data-origin="Gainesville, FL|-82.32,29.65" data-coauthors="Meric Augat:St. Louis, MO|-90.30,38.64;Michael Jury:Gainesville, FL|-82.32,29.65" data-talks="JMM Denver|-104.99,39.73">
+                    25. Meric Augat, Michael Jury, J. E. Pascoe. <a href="https://scholar.google.com/scholar?q=%22Effective+noncommuative+Nevanlinna-Pick+interpolation+on+the+row+ball+and+applications%22+Pascoe" target="_blank"><em>Effective noncommuative Nevanlinna-Pick interpolation on the row ball and applications</em></a>. J. Math. Anal. Appl. 492 (2020), no. 2, 124457, 21 pp.
+                </li>
+                <li data-paper-id="26" data-year="2020" data-origin="Gainesville, FL|-82.32,29.65" data-coauthors="Igor Klep:Ljubljana, SI|14.50,46.05;Gregor Podlogar:Ljubljana, SI|14.50,46.05;Jurij Volcic:College Station, TX|-96.34,30.63" data-talks="WashU Seminar|-90.30,38.64;JMM Washington DC|-77.03,38.90">
+                    26. Igor Klep, J. E. Pascoe, Gregor Podlogar and Jurij Vol&#269;i&#269;. <a href="https://scholar.google.com/scholar?q=%22Noncommutative+rational+functions+invariant+under+the+action+of+a+finite+solvable+group%22+Pascoe" target="_blank"><em>Noncommutative rational functions invariant under the action of a finite solvable group</em></a>. J. Math. Anal. Appl. 490 (2020), no. 2, 124341, 17 pp.
+                </li>
+                <li data-paper-id="27" data-year="2020" data-origin="Gainesville, FL|-82.32,29.65" data-coauthors="" data-talks="">
+                    27. J. E. Pascoe. <a href="https://scholar.google.com/scholar?q=%22An+entire+free+holomorphic+function+which+is+unbounded+on+the+row+ball%22+Pascoe" target="_blank"><em>An entire free holomorphic function which is unbounded on the row ball</em></a>. J. Operator Theory, 84 (2020), no. 2, 365-367.
+                </li>
+                <li data-paper-id="28" data-year="2020" data-origin="Gainesville, FL|-82.32,29.65" data-coauthors="" data-talks="Fields Institute|-79.39,43.65;IWOTA Lisbon|-9.13,38.72">
+                    28. J. E. Pascoe. <a href="https://scholar.google.com/scholar?q=%22Committee+spaces+and+the+random+column-row+property%22+Pascoe" target="_blank"><em>Committee spaces and the random column-row property</em></a>. Complex Anal. Oper. Theory 14 Paper No. 13. (2020).
+                </li>
+                <li data-paper-id="29" data-year="2019" data-origin="Gainesville, FL|-82.32,29.65" data-coauthors="Benjamin Passer:Annapolis, MD|-76.48,38.98;Ryan Tully-Doyle:New Haven, CT|-72.92,41.30" data-talks="">
+                    29. J. E. Pascoe, Benjamin Passer, Ryan Tully-Doyle. <a href="https://scholar.google.com/scholar?q=%22Representation+of+free+Herglotz+functions%22+Pascoe" target="_blank"><em>Representation of free Herglotz functions</em></a>. Indiana Univ. Math. J. 68 No. 4 (2019), 1199-1215.
+                </li>
+                <li data-paper-id="30" data-year="2019" data-origin="Gainesville, FL|-82.32,29.65" data-coauthors="" data-talks="Bucknell DVP|-76.88,40.95">
+                    30. J. E. Pascoe. <a href="https://arxiv.org/abs/1709.05986" target="_blank"><em>The wedge-of-the-edge theorem: edge-of-the-wedge type phenomenon within the common real boundary</em></a>. Canad. Math. Bull. 62 (2019), no. 2, 417-427.
+                </li>
+                <li data-paper-id="31" data-year="2019" data-origin="Gainesville, FL|-82.32,29.65" data-coauthors="" data-talks="ILAS Rio de Janeiro|-43.20,-22.90;SEAM Alabama|-87.53,33.20">
+                    31. J. E. Pascoe. <a href="https://scholar.google.com/scholar?q=%22An+elementary+method+to+compute+the+algebra+generated+by+some+given+matrices%22+Pascoe" target="_blank"><em>An elementary method to compute the algebra generated by some given matrices</em></a>. Linear Algebra Appl. 571 (2019), 132-142.
+                </li>
+                <li data-paper-id="32" data-year="2019" data-origin="Gainesville, FL|-82.32,29.65" data-coauthors="" data-talks="">
+                    32. J. E. Pascoe. <a href="http://arxiv.org/abs/1409.2605" target="_blank"><em>Note on L&ouml;wner's theorem on matrix monotone functions in several commuting variables of Agler, McCarthy and Young</em></a>. Monatsh. Math. 189 no. 2 (2019), 377-381.
+                </li>
+                <li data-paper-id="33" data-year="2019" data-origin="Gainesville, FL|-82.32,29.65" data-coauthors="Ryan Tully-Doyle:New Haven, CT|-72.92,41.30" data-talks="">
+                    33. J. E. Pascoe, Ryan Tully-Doyle. <a href="https://arxiv.org/abs/1607.06737" target="_blank"><em>Cauchy transforms arising from homomorphic conditional expectations parametrize free Pick functions</em></a>. J. Math. Anal. Appl. 472 (2) 2019. 1487-1498.
+                </li>
+                <li data-paper-id="34" data-year="2018" data-origin="St. Louis, MO|-90.30,38.64" data-coauthors="" data-talks="WashU Seminar|-90.30,38.64;Saarbrucken|6.99,49.23">
+                    34. J. E. Pascoe. <a href="http://arxiv.org/abs/1605.08707" target="_blank"><em>An inductive Julia-Carath&eacute;odory theorem for Pick functions in two variables</em></a>. Proc. Edinb. Math. Soc., (2) 61 (2018), no. 3. 647-660.
+                </li>
+                <li data-paper-id="35" data-year="2018" data-origin="St. Louis, MO|-90.30,38.64" data-coauthors="David Cushing:Newcastle, UK|-1.61,54.97;Ryan Tully-Doyle:New Haven, CT|-72.92,41.30" data-talks="UF Colloquium|-82.32,29.65">
+                    35. David Cushing, J. E. Pascoe, Ryan Tully-Doyle. <a href="https://scholar.google.com/scholar?q=%22Free+functions+with+symmetry%22+Pascoe" target="_blank"><em>Free functions with symmetry</em></a>. Math. Z., 289 (2018), no. 3-4, 837-857.
+                </li>
+                <li data-paper-id="36" data-year="2018" data-origin="St. Louis, MO|-90.30,38.64" data-coauthors="Kelly Bickel:Lewisburg, PA|-76.88,40.95;Alan Sola:Stockholm, SE|18.06,59.36" data-talks="">
+                    36. Kelly Bickel, J. E. Pascoe, Alan Sola. <a href="https://arxiv.org/abs/1703.04198" target="_blank"><em>Derivatives of rational inner functions: geometry of singularities and integrability at the boundary</em></a>. Proc. Lond. Math. Soc., 116 (2) 281-329 (2018).
+                </li>
+                <li data-paper-id="37" data-year="2018" data-origin="St. Louis, MO|-90.30,38.64" data-coauthors="" data-talks="IWOTA Shanghai|121.47,31.23;MTNS Hong Kong|114.16,22.31">
+                    37. J. E. Pascoe. <a href="https://arxiv.org/abs/1706.08236" target="_blank"><em>The noncommutative L&ouml;wner theorem for matrix monotone functions over operator systems</em></a>. Linear Algebra Appl. 541 (2018) 54-59.
+                </li>
+                <li data-paper-id="38" data-year="2018" data-origin="St. Louis, MO|-90.30,38.64" data-coauthors="" data-talks="Wabash Miniconference|-86.91,40.42;Innsbruck|11.39,47.26">
+                    38. J. E. Pascoe. <a href="https://arxiv.org/abs/1703.06951" target="_blank"><em>Positivstellens&auml;tze for noncommutative rational expressions</em></a>. Proc. Amer. Math. Soc., 146 (2018) 933-937.
+                </li>
+                <li data-paper-id="39" data-year="2018" data-origin="St. Louis, MO|-90.30,38.64" data-coauthors="John E. McCarthy:St. Louis, MO|-90.30,38.64" data-talks="MCA Montreal|-73.56,45.50">
+                    39. John E. McCarthy, J. E. Pascoe. <a href="https://arxiv.org/abs/1606.09629" target="_blank"><em>A non-commutative Julia Inequality</em></a>. Math. Ann., 370 (1-2) 423-446, 2018.
+                </li>
+                <li data-paper-id="40" data-year="2017" data-origin="St. Louis, MO|-90.30,38.64" data-coauthors="" data-talks="Bucknell DVP|-76.88,40.95;ICMS Workshop|-3.18,55.95;JMM Atlanta|-84.38,33.74">
+                    40. J. E. Pascoe. <a href="https://scholar.google.com/scholar?q=%22A+wedge-of-the-edge+theorem%3A+analytic+continuation+of+multivariable+Pick+functions+in+and+around+the+boundary%22+Pascoe" target="_blank"><em>A wedge-of-the-edge theorem: analytic continuation of multivariable Pick functions in and around the boundary</em></a>. Bull. Lond. Math. Soc., 49 (5) 916-945, 2017.
+                </li>
+                <li data-paper-id="41" data-year="2017" data-origin="St. Louis, MO|-90.30,38.64" data-coauthors="Ryan Tully-Doyle:New Haven, CT|-72.92,41.30" data-talks="">
+                    41. J. E. Pascoe, Ryan Tully-Doyle. <a href="https://scholar.google.com/scholar?q=%22Free+Pick+functions%3A+representations%2C+asymptotic+behavior+and+matrix+monotonicity+in+several+noncommuting+variables%22+Pascoe" target="_blank"><em>Free Pick functions: representations, asymptotic behavior and matrix monotonicity in several noncommuting variables</em></a>. J. Funct. Anal., 273 (1) 283-328 (2017).
+                </li>
+                <li data-paper-id="42" data-year="2017" data-origin="St. Louis, MO|-90.30,38.64" data-coauthors="John E. McCarthy:St. Louis, MO|-90.30,38.64" data-talks="Auckland Seminar|174.76,-36.85">
+                    42. John McCarthy, J. E. Pascoe. <a href="https://scholar.google.com/scholar?q=%22The+Julia-Caratheodory+theorem+on+the+bidisk+revisited%22+Pascoe" target="_blank"><em>The Julia-Carath&eacute;odory theorem on the bidisk revisited</em></a>. Acta Sci. Math. (Szeged), 83:1-2, 165-175, 2017.
+                </li>
+                <li data-paper-id="43" data-year="2017" data-origin="St. Louis, MO|-90.30,38.64" data-coauthors="Igor Klep:Auckland, NZ|174.76,-36.85;Jurij Volcic:Auckland, NZ|174.76,-36.85" data-talks="Iowa Workshop|-91.53,41.66">
+                    43. Igor Klep, J. E. Pascoe, Jurij Vol&#269;i&#269;. <a href="https://scholar.google.com/scholar?q=%22Regular+and+positive+noncommutative+rational+functions%22+Pascoe" target="_blank"><em>Regular and positive noncommutative rational functions</em></a>. J. Lond. Math. Soc., 95 (2) 613-632, 2017.
+                </li>
+                <li data-paper-id="44" data-year="2016" data-origin="St. Louis, MO|-90.30,38.64" data-coauthors="J. William Helton:San Diego, CA|-117.23,32.88;Ryan Tully-Doyle:Hampton, VA|-76.33,37.02;Victor Vinnikov:Beersheba, IL|34.79,31.25" data-talks="MTNS Minneapolis|-93.22,44.97;IWOTA 2016 (St. Louis)|-90.30,38.64;JMM Seattle|-122.33,47.60">
+                    44. J. William Helton, J. E. Pascoe, Ryan Tully-Doyle, Victor Vinnikov. <a href="https://scholar.google.com/scholar?q=%22Convex+entire+noncommutative+functions+are+polynomials+of+degree+two+or+less%22+Pascoe" target="_blank"><em>Convex entire noncommutative functions are polynomials of degree two or less</em></a>. Integral Equations Operator Theory, 86 (2), 151-163, 2016.
+                </li>
+                <li data-paper-id="45" data-year="2014" data-origin="San Diego, CA|-117.23,32.88" data-coauthors="" data-talks="JMM Baltimore|-76.61,39.29;UTC Colloquium|-85.30,35.04;GPOTS Manhattan|-96.58,39.18;Gargnano|10.66,45.68;JMM San Antonio|-98.49,29.42;UCSD|-117.23,32.88">
+                    45. J. E. Pascoe. <a href="https://scholar.google.com/scholar?q=%22The+inverse+function+theorem+and+the+Jacobian+conjecture+for+free+analysis%22+Pascoe" target="_blank"><em>The inverse function theorem and the Jacobian conjecture for free analysis</em></a>. Math. Z., 278 (3-4) 987-994, 2014.
+                </li>
             </ul>
         </div>
 
         <div class="cell cell-full bg-yellow">
             <h2>Preprints</h2>
             <ul class="citation-list">
-                <li> Sujit Sakharam Damase, J. E. Pascoe. <a href="https://arxiv.org/search/math?query=%22On+positive+definite+thresholding+of+correlation+matrices%22&searchtype=all" target="_blank"><em>On positive definite thresholding of correlation matrices</em></a>. preprint.</li>
-                <li> Greg Knese, J. E. Pascoe, Alan Sola. <a href="https://arxiv.org/search/math?query=%22Stable+polynomials+and+bounded+rational+functions+in+the+unit+ball%22&searchtype=all" target="_blank"><em>Stable polynomials and bounded rational functions in the unit ball</em></a>. preprint.</li>
-                <li> Sujit Sakharam Damase, J. E. Pascoe. <a href="https://arxiv.org/search/math?query=%22Complete+discrete+Schoenberg-Delsarte+theory+for+homogeneous+spaces%22&searchtype=all" target="_blank"><em>Complete discrete Schoenberg-Delsarte theory for homogeneous spaces</em></a>. preprint.</li>
-                <li> Sourav Pal, J. E. Pascoe, Nitin Tomar. <a href="https://arxiv.org/search/math?query=%22Spectral+constants+for+the+quantum+annulus%22&searchtype=all" target="_blank"><em>Spectral constants for the quantum annulus</em></a>. preprint.</li>
-                <li> Geoffrey Hutinet, J. E. Pascoe. <a href="https://arxiv.org/search/math?query=%22Indices+of+quadratic+programs+over+reproducing+kernel+Hilbert+spaces+for+fun+and+profit%22&searchtype=all" target="_blank"><em>Indices of quadratic programs over reproducing kernel Hilbert spaces for fun and profit</em></a>. preprint.</li>
-                <li> Michael Coopman, Austin Jacobs, H. B. Pascoe, J. E. Pascoe. <a href="https://arxiv.org/search/math?query=%22The+geometry+of+inconvenience+and+perverse+equilibria+in+trade+networks%22&searchtype=all" target="_blank"><em>The geometry of inconvenience and perverse equilibria in trade networks</em></a>. preprint.</li>
-                <li> J. E. Pascoe. <a href="https://arxiv.org/search/math?query=%22Germination+phenomena%22+Pascoe&searchtype=all" target="_blank"><em>Germination phenomena</em></a>. preprint.</li>
-                <li>J. E. Pascoe, Ryan Tully-Doyle. <a href="https://arxiv.org/search/math?query=%22Averaged+mixed+Julia-Fatou+type+theory+with+applications+to+spectral+foliation%22&searchtype=all" target="_blank"><em>Averaged mixed Julia-Fatou type theory with applications to spectral foliation</em></a>. preprint.</li>
-                <li>J. E. Pascoe. <a href="https://arxiv.org/search/math?query=%22Free+noncommutative+principal+divisors+and+commutativity+of+the+tracial+fundamental+group%22&searchtype=all" target="_blank"><em>Free noncommutative principal divisors and commutativity of the tracial fundamental group</em></a>. preprint.</li>
-                <li> J. E. Pascoe. <a href="https://arxiv.org/search/math?query=%22Noncommutative+Schur-type+products+and+their+Schoenberg+theorem%22+Pascoe&searchtype=all" target="_blank"><em>Noncommutative Schur-type products and their Schoenberg theorem</em></a>. in revision.</li>
-            </ul>
-        </div>
-
-        <div class="cell cell-full bg-mint">
-            <h2>Presentations & Slides</h2>
-            
-            <h3>Colloquia and Lecture Series</h3>
-            <ul>
-                <li>"Constrained sphere packing and the interpolation problem for positive definite functions", Midrash, Weizmann Insitute</li>
-                <li>"Universality of the Schur Complement", Ashoka University, Summer 2025</li>
-                <li>"Dilation theory and applications" Indian Statistical Institute, Delhi, Summer 2025</li>
-                <li>"Kernel embeddings and Herglotz duality" University of Delhi, South Campus, Summer 2025</li>
-                <li>"Reproducing Kernel Hibert Spaces and their applications", Ramjas College, Summer 2025</li>
-                <li>"Reproducing Kernel Hibert Spaces and Dynamical Systems", St Thomas University, Bangalore, Summer 2025</li>
-                <li>"Matrix convex functions" IIT Bombay, Summer 2025</li>
-                <li>"Geometric aspects of kernel embeddings" Eigenfunctions seminar, Indian Institute of Science, Bangalore, Summer 2025</li>
-                <li>"Geometric aspects of kernel embeddings" Cochin University of Science and Technology, July 2025</li>
-                <li>"Geometric dilation and the quantum annulus." Colloquium, Drexel, January 2022</li>
-                <li>"The Jacobian conjecture in noncommuting variables and free universal monodromy." REU Colloquium, University of Tennessee, Chattanooga, Summer 2021</li>
-                <li>"The tracial fundamental group." Colloquium, University of Ljubljana, Fall 2020.</li>
-                <li>"Monodromy and logarithms of nonsingular matrix-valued functions." Distinguished Visiting Professor Lecture Series, Bucknell, March 2020</li>
-                <li>"Manipulating matrix inequalities." Colloquium, University of Florida, Fall 2018.</li>
-                <li>"The wedge-of-the-edge theorem." Distinguished Visiting Professor Lecture Series, Bucknell, October 2017.</li>
-                <li>"Real algebraic geometry and matrix inequalities." Distinguished Visiting Professor Lecture Series, Bucknell, October 2017.</li>
-                <li>"Free functions with Symmetry." Colloquium, University of Florida, Fall 2016.</li>
-            </ul>
-
-            <h3>Long Invited Talks</h3>
-            <ul>
-                <li>"Constrained sphere packing and the interpolation problem for positive definite functions", Tsinghua Mathematical Forum, December 2025</li>
-                <li>"The free functional calculus", SLMath, Revisiting Fundamental Problems Workshop: Infinite-Dimensional Division Algebras Algebraicity and Freeness December 2025</li>
-                <li>"Spectral constants and dilation theory" at Operator Analyis on Function Spaces conference in Winnipeg June 2025</li>
-                <li>"Beyond physical maze solvers via modern portfolio theory" IPAM Mathematics of Intelligences Fall 2024</li>
-                <li>"Indices for quadratic programs for fun and profit" at MFO workshop "Non-commutative Function Theory and Free Probability" May 2, 2024</li>
-                <li>"Indices for kernel embeddings" at Stockholm University Analysis Seminar May 8, 2024</li>
-                <li>"Indices of quadratic programs over reproducing kernel Hilbert spaces for fun and profit" Spaces of Analytic Functions and their Operators Conference at Saarbrucken May 16, 2024</li>
-                <li>"Abstract preservers" University of Delaware Analysis Seminar 2023 Spring</li>
-                <li>"The radical Laguerre P&oacute;lya class" Oberwolfach March 2022.</li>
-                <li>"Abstract preservers" ICMS Workshop on Applied Positivity (2021)</li>
-                <li>"Free convexity, plurisubharmonicity, and universal monodromy" AIM workshop on Noncommutative Inequalities (2021)</li>
-                <li>"Trace minmax functions and the radical Laguerre-P&oacute;lya class" Clemson Analysis Seminar (Feb 2021)</li>
-                <li>"The tracial fundamental group" 2TART Seminar series (2020)</li>
-                <li>"Trace minmax functions and the radical Laguerre-P&oacute;lya class" 2TART: OTWIA (2020)</li>
-                <li>"Free convexity, plurisubharmonicity, and universal monodromy" Saarbrucken Analysis Seminar (2020)</li>
-                <li>"The royal road to the multivariate L&ouml;wner theorem" Stockholm University Analysis seminar (2019)</li>
-                <li>"The failure of the column-row property in the Fock space." Focus Program on Applications of Noncommutative Function Theory, Fields Institute, June 2019.</li>
-                <li>"Noncommutative Positivstellens&auml;tze." Wabash Miniconference, September 2017.</li>
-                <li>"Regular and positive noncommutative rational functions." Iowa 2016 Workshop on Noncommutative Analysis.</li>
-                <li>"Monotonicity in free analysis." JMM 2016, Special Session on Advances in Free Analysis.</li>
-                <li>"Representation formulas for Pick functions in two complex variables and free function theory." Free Stochastic Analysis Mini-Workshop, Saarbrucken.</li>
-            </ul>
-
-            <h3>Further Invited Talks</h3>
-            <ul>
-                <li>"The spectral constant for the Quantum Cross" IWOTA 2025</li>
-                <li>"Boundary behavior for embedded distributions for fun and profit" Multivariable Operator Theory Conference 2024 June 10, 2024</li>
-                <li>"Payoff minus half normed squared optimization problems" JMM 2024 special session</li>
-                <li>"Germination Phenomena" Drexel Analysis seminar</li>
-                <li>"Abstract Presevers" IWOTA 2020 (in 2021)</li>
-                <li>"Realizations for special classes of noncommutative functions" IWOTA 2021</li>
-                <li>"Algebraic geometry and topology arising from tracial and determinantal free noncommutative functions" JMM 2021</li>
-                <li>"Advances in realization theory for special classes of noncommutative functions" JMM 2020</li>
-                <li>"The column-row property fails for the multipliers of the Fock space" IWOTA 2019</li>
-                <li>"Noncommutative positivity preserving products and their Schoenberg type theory" ILAS 2019, July 12, 2019</li>
-                <li>"Computing matrix algebra dimension and other exotic applications of the Pick matrix" ILAS 2019, July 8, 2019</li>
-                <li>"Calculating algebra dimension and other exotic applications of the Pick matrix." SEAM 2019, Alabama.</li>
-                <li>"Geometric aspects of the Julia quotient on sets with controlled tangential approach." AMS Sectional 2018</li>
-                <li>"Monotone maps for manipulating matrix inequalities." IWOTA 2018. Shanghai, China.</li>
-                <li>"Monotone maps for manipulating matrix inequalities." MTNS 2018. Hong Kong.</li>
-                <li>"Invariant theory for non-commutative functions and applications." JMM 2018, San Diego.</li>
-                <li>"Applications of model- realization theory to inverse problems in free probability." Mathematical Congress of the Americas, 2017.</li>
-                <li>"Applications of model- realization theory to inverse problems in free probability." JMM 2017.</li>
-                <li>"Matrix monotonicity in several variables." Semi-plenary, Southeastern Analysis Meeting (SEAM) 2016.</li>
-                <li>"Matrix monotonicity in several variables." IWOTA 2016.</li>
-                <li>"Matrix monotonicity in several variables." MTNS 2016.</li>
-                <li>"Free functions with Symmetry." San Antonio, JMM 2015.</li>
-                <li>"Using operator theory to measure the asymptotic behavior of Pick functions in two variables at infinity." San Antonio, JMM 2015.</li>
-                <li>"A wedge of the edge of the wedge." ICMS Workshop 2014.</li>
-                <li>"Matrix monotonicity in several noncommuting variables." JMM 2014.</li>
-                <li>"Matrix monotonicity in several noncommuting variables." St. Louis AMS Sectional Meeting, Fall 2013.</li>
-            </ul>
-
-            <h3>Invited Seminar Talks</h3>
-            <ul>
-                <li>"The tracial fundamental group and free universal monodromy" CMSA Seminar, Harvard, January 2026</li>
-                <li>"Constrained sphere packing and the interpolation problem for positive definite functions", Israel Noncommutative Analysis Seminar, Technion, December 2025</li>
-                <li>"Constrained sphere packing and the interpolation problem for positive definite functions", Ben Gurion University seminar, December 2025</li>
-                <li>"Geometric aspects of rational inner function membership in function spaces." Linear Analysis seminar TAMU Spring 2017.</li>
-                <li>"The Julia-Carath&eacute;odory theorem on the bidisk and the bi-upper half plane." Seminar at University of Auckland, February 2017.</li>
-                <li>"The Julia-Carath&eacute;odory theorem on the bidisk." Seminar, University of Florida, Fall 2016.</li>
-                <li>"Matrix monotone functions in one and several variables." TAMU Linear Analysis Seminar, October 24, 2014.</li>
-            </ul>
-
-            <h3>Other Talks</h3>
-            <ul>
-                <li>"Matrix convex verbatim enumeration functions are graphical" Oct 20 and 27 Drexel Analysis Seminar</li>
-                <li>"Positivstellens&auml;tze for noncommutative rational functions." Sums of Squares: Real Algebraic Geometry and its Applications, Innsbruck, August 2017.</li>
-                <li>"Geometric aspects of rational inner function membership in function spaces." WashU Analysis Seminar Spring 2017.</li>
-                <li>"Positive noncommutative rational functions." Analysis Seminar WashU Spring 2016.</li>
-                <li>"Hankel Vector Moment Sequences." Analysis Seminar WashU Fall 2015.</li>
-                <li>"Hankel vector moment sequences." GPOTS 2014.</li>
-                <li>"Injective free polynomials." Hilbert Function Spaces 2013.</li>
-                <li>"Boundary approximation and interpolation of Pick functions." Advancement to Candidacy 2013.</li>
-                <li>"The Pick problem." Food for Thought 2013.</li>
-                <li>"The Hamburger moment problem." Food for Thought 2012.</li>
+                <li data-paper-id="46" data-year="2025" data-origin="Philadelphia, PA|-75.18,39.95" data-coauthors="Sujit S. Damase:Bangalore, IN|77.59,12.97" data-talks="">
+                     Sujit Sakharam Damase, J. E. Pascoe. <a href="https://arxiv.org/search/math?query=%22On+positive+definite+thresholding+of+correlation+matrices%22&searchtype=all" target="_blank"><em>On positive definite thresholding of correlation matrices</em></a>. preprint.
+                </li>
+                <li data-paper-id="47" data-year="2025" data-origin="Philadelphia, PA|-75.18,39.95" data-coauthors="Greg Knese:St. Louis, MO|-90.30,38.64;Alan Sola:Stockholm, SE|18.06,59.36" data-talks="">
+                     Greg Knese, J. E. Pascoe, Alan Sola. <a href="https://arxiv.org/search/math?query=%22Stable+polynomials+and+bounded+rational+functions+in+the+unit+ball%22&searchtype=all" target="_blank"><em>Stable polynomials and bounded rational functions in the unit ball</em></a>. preprint.
+                </li>
+                <li data-paper-id="48" data-year="2025" data-origin="Philadelphia, PA|-75.18,39.95" data-coauthors="Sujit S. Damase:Bangalore, IN|77.59,12.97" data-talks="Technion|35.02,32.77;Weizmann|34.81,31.90;Tsinghua|116.32,39.99;Ashoka Univ|77.10,28.94;ISI Delhi|77.18,28.53;DU South Campus|77.16,28.58;Ramjas|77.20,28.68;St Thomas|77.59,12.97;IIT Bombay|72.91,19.13;IISc Bangalore|77.59,12.97;CUSAT|76.32,10.04;SLMath|-122.25,37.88;Winnipeg|-97.14,49.89">
+                     Sujit Sakharam Damase, J. E. Pascoe. <a href="https://arxiv.org/search/math?query=%22Complete+discrete+Schoenberg-Delsarte+theory+for+homogeneous+spaces%22&searchtype=all" target="_blank"><em>Complete discrete Schoenberg-Delsarte theory for homogeneous spaces</em></a>. preprint.
+                </li>
+                <li data-paper-id="49" data-year="2025" data-origin="Philadelphia, PA|-75.18,39.95" data-coauthors="Sourav Pal:Mumbai, IN|72.87,19.07;Nitin Tomar:Mumbai, IN|72.87,19.07" data-talks="">
+                     Sourav Pal, J. E. Pascoe, Nitin Tomar. <a href="https://arxiv.org/search/math?query=%22Spectral+constants+for+the+quantum+annulus%22&searchtype=all" target="_blank"><em>Spectral constants for the quantum annulus</em></a>. preprint.
+                </li>
+                <li data-paper-id="50" data-year="2024" data-origin="Philadelphia, PA|-75.18,39.95" data-coauthors="Geoffrey Hutinet:Philadelphia, PA|-75.18,39.95" data-talks="Oberwolfach|8.22,48.33;Saarbrucken|6.99,49.23;Stockholm|18.06,59.36;IPAM|-118.44,34.07;JMM San Francisco|-122.41,37.77">
+                     Geoffrey Hutinet, J. E. Pascoe. <a href="https://arxiv.org/search/math?query=%22Indices+of+quadratic+programs+over+reproducing+kernel+Hilbert+spaces+for+fun+and+profit%22&searchtype=all" target="_blank"><em>Indices of quadratic programs over reproducing kernel Hilbert spaces for fun and profit</em></a>. preprint.
+                </li>
+                <li data-paper-id="51" data-year="2024" data-origin="Philadelphia, PA|-75.18,39.95" data-coauthors="Michael Coopman:Philadelphia, PA|-75.18,39.95;Austin Jacobs:Philadelphia, PA|-75.18,39.95;H. B. Pascoe:Philadelphia, PA|-75.18,39.95" data-talks="">
+                     Michael Coopman, Austin Jacobs, H. B. Pascoe, J. E. Pascoe. <a href="https://arxiv.org/search/math?query=%22The+geometry+of+inconvenience+and+perverse+equilibria+in+trade+networks%22&searchtype=all" target="_blank"><em>The geometry of inconvenience and perverse equilibria in trade networks</em></a>. preprint.
+                </li>
+                <li data-paper-id="52" data-year="2023" data-origin="Philadelphia, PA|-75.18,39.95" data-coauthors="" data-talks="Drexel Analysis seminar|-75.18,39.95">
+                     J. E. Pascoe. <a href="https://arxiv.org/search/math?query=%22Germination+phenomena%22+Pascoe&searchtype=all" target="_blank"><em>Germination phenomena</em></a>. preprint.
+                </li>
+                <li data-paper-id="53" data-year="2023" data-origin="Philadelphia, PA|-75.18,39.95" data-coauthors="Ryan Tully-Doyle:San Luis Obispo, CA|-120.66,35.30" data-talks="">
+                    J. E. Pascoe, Ryan Tully-Doyle. <a href="https://arxiv.org/search/math?query=%22Averaged+mixed+Julia-Fatou+type+theory+with+applications+to+spectral+foliation%22&searchtype=all" target="_blank"><em>Averaged mixed Julia-Fatou type theory with applications to spectral foliation</em></a>. preprint.
+                </li>
+                <li data-paper-id="54" data-year="2020" data-origin="Gainesville, FL|-82.32,29.65" data-coauthors="" data-talks="Ljubljana Colloquium|14.50,46.05;2TART Seminar|-82.32,29.65;Harvard CMSA|-71.11,42.37">
+                    J. E. Pascoe. <a href="https://arxiv.org/search/math?query=%22Free+noncommutative+principal+divisors+and+commutativity+of+the+tracial+fundamental+group%22&searchtype=all" target="_blank"><em>Free noncommutative principal divisors and commutativity of the tracial fundamental group</em></a>. preprint.
+                </li>
+                <li data-paper-id="55" data-year="2019" data-origin="Gainesville, FL|-82.32,29.65" data-coauthors="" data-talks="ILAS Rio de Janeiro|-43.20,-22.90">
+                     J. E. Pascoe. <a href="https://arxiv.org/search/math?query=%22Noncommutative+Schur-type+products+and+their+Schoenberg+theorem%22+Pascoe&searchtype=all" target="_blank"><em>Noncommutative Schur-type products and their Schoenberg theorem</em></a>. in revision.
+                </li>
             </ul>
         </div>
 
@@ -625,6 +656,8 @@ Note that a whole economy must exist to support these axioms, everyone plays the
             </div>
         </div>
 
+
+
         <div class="cell bg-lavender">
             <h2> Links </h2>
             <ul>
@@ -650,42 +683,285 @@ Note that a whole economy must exist to support these axioms, everyone plays the
         Updated March 2026
     </div>
 
+    <div id="latent-map-overlay">
+        <div class="map-info">
+            <h2 id="map-title" style="color: white; margin:0;">Initializing...</h2>
+            <p id="map-meta" style="margin: 5px 0;">Routing coordinates...</p>
+            <div class="map-legend">
+                <div class="legend-item"><div class="legend-color" style="background:#ffeb3b;"></div>Origin</div>
+                <div class="legend-item"><div class="legend-color" style="background:#abefcd;"></div>Coauthor</div>
+                <div class="legend-item"><div class="legend-color" style="background:#ff3366;"></div>Talk/Conference</div>
+            </div>
+        </div>
+        <div class="map-canvas" id="map-svg-container">
+            <div class="controls-hint">Scroll to Zoom | Drag to Pan</div>
+        </div>
+        <button onclick="document.getElementById('latent-map-overlay').classList.remove('active')" 
+                style="margin-top: 20px; padding: 10px 20px; background: none; border: 1px solid white; color: white; cursor: pointer;">
+            Close Manifestation
+        </button>
+    </div>
+
+
+
+
+
     <script>
         (function() {
-            // Calculates a subtle pseudo-random spectral constant as a signature. 
-            // The boundaries of computation extend beyond the page.
-            const nodeVolume = document.querySelectorAll('*').length;
-            const approximateSpectralConstant = Math.exp(Math.PI * Math.sqrt(nodeVolume) / 2);
-            console.log(`[Latent Sequence]: Connecting to broader network. Approximated quantum annulus spectral constant: ${approximateSpectralConstant}`);
-            
             // [Mycelial Protocol Activated]
-            // A static page is a dead leaf. We build living systems.
-            // This protocol maps the semantic distance between this local node (document) 
-            // and the global academic graph, ensuring resilience against link rot.
-            console.log("[Mycelial Protocol]: Searching for unresolved nodes... the network seeks closure.");
-            
-            // [Topology Mapping]
-            // We register the geographical footprint, now dynamically responding to the viewport.
-            // Chromatic resonance applied to mapping vectors via vexillology logic. 
-            const globalNodes = Array.from(document.querySelectorAll('[data-node]')).map(el => el.getAttribute('data-node'));
-            console.log(`[Mycelial Protocol]: Mapped physical resonance across coordinates: [${globalNodes.join(', ')}]. The Republic of Letters remains active.`);
-            
-            // [Graph Theoretical Embedding]
-            // We acknowledge the fluid nature of human capital. 
-            // Victor Vinnikov acting as a bilocated node invariant under the IL <-> DE geographical translation.
-            // Node migration detected: Jurij Volcic transposed to New Zealand [NZ].
-            // New edges registered: Pascoe <-> Bhattacharyya [IN], Pascoe <-> Pradhan [IN], Pascoe <-> Kennedy [CA].
-            // Re-instantiating [CN] as a strict structural node. The adjacency matrix retains a zero-weight placeholder for future routing. 
-            // Apoptosis triggered: Temporal nodes pruned to preserve graph integrity.
-            // Serialized transmission: Abstract character topologies flattened to HTML entities to bypass local parsing rejections.
-            // New recruitment node established [bg-cyan]: Activating attractor state for incoming PhD capital.
-            // [Graph Refinement]: Hierarchical edges (advisors, students, familial links) explicitly pruned.
-            // [Routing Evolution]: Static endpoints are graves. Implemented dynamic !ducky routing across the coauthor sub-graph [bg-peach] to guarantee topological permanence.
-            
-            // [Game Theory & Outreach]: Bridge is the ultimate study in constrained signaling. 
-            // Routing outreach vectors to Pennsylvania local sub-graphs to maximize immediate societal impact. 
-            // Volunteerism is just algorithmic redundancy ensuring the survival of legacy nodes.
-            
+            const MAP_DELAY_MS = 10000; // 10 seconds proof-of-work.
+            let latentTimer;
+
+            // Strict 360x180 Geographic Array (Equirectangular)
+            const WORLD_PATH = "M 15,25 L 35,15 L 75,10 L 100,10 L 115,15 L 125,25 L 115,35 L 108,45 L 100,55 L 98,65 L 105,75 L 85,75 L 70,65 L 55,50 L 45,45 L 20,35 Z " +
+                               "M 105,75 L 130,85 L 145,105 L 120,155 L 110,155 L 100,110 L 95,90 Z " +
+                               "M 175,50 L 180,45 L 195,25 L 250,15 L 310,15 L 345,25 L 340,35 L 330,45 L 310,50 L 305,60 L 290,75 L 285,85 L 270,75 L 260,85 L 255,80 L 255,60 L 225,75 L 215,60 L 205,50 L 190,45 Z " +
+                               "M 170,55 L 210,62 L 225,70 L 235,85 L 220,100 L 205,125 L 195,125 L 185,95 L 160,80 L 165,60 Z " +
+                               "M 295,110 L 320,105 L 335,115 L 330,130 L 305,130 Z " +
+                               "M 350,125 L 355,128 L 352,135 L 348,130 Z " +
+                               "M 130,10 L 160,10 L 155,25 L 140,30 Z " +
+                               "M 225,100 L 230,105 L 225,115 L 220,110 Z " +
+                               "M 315,45 L 325,45 L 320,60 L 310,55 Z " +
+                               "M 165,35 L 175,35 L 175,45 L 165,45 Z " +
+                               "M 280,90 L 305,90 L 310,100 L 290,105 L 275,100 Z " +
+                               "M 100,65 L 115,65 L 115,70 L 100,70 Z";
+
+            // 1. Hook the Individual Paper Nodes
+            document.querySelectorAll('.citation-list li').forEach(item => {
+                item.addEventListener('mouseenter', () => {
+                    item.classList.add('charging');
+                    latentTimer = setTimeout(() => {
+                        triggerLatentMap(item);
+                    }, MAP_DELAY_MS);
+                });
+
+                item.addEventListener('mouseleave', () => {
+                    item.classList.remove('charging');
+                    clearTimeout(latentTimer);
+                });
+            });
+
+            // 2. Hook the Master H1 Node (The Global Union)
+            const h1Node = document.querySelector('header h1');
+            h1Node.addEventListener('mouseenter', () => {
+                h1Node.classList.add('charging');
+                latentTimer = setTimeout(() => {
+                    triggerGlobalUnionMap();
+                }, MAP_DELAY_MS);
+            });
+            h1Node.addEventListener('mouseleave', () => {
+                h1Node.classList.remove('charging');
+                clearTimeout(latentTimer);
+            });
+
+            // Interactive Camera State
+            let transform = { x: 0, y: 0, k: 1 };
+            let isDragging = false;
+            let startX, startY;
+
+            function attachCameraControls(svg, g) {
+                transform = { x: 0, y: 0, k: 1 };
+                g.setAttribute('transform', `translate(0,0) scale(1)`);
+
+                svg.addEventListener('wheel', (e) => {
+                    e.preventDefault();
+                    const zoomSensitivity = 0.001;
+                    const delta = -e.deltaY * zoomSensitivity;
+                    const newK = Math.max(0.5, Math.min(transform.k * Math.exp(delta), 10)); 
+
+                    const rect = svg.getBoundingClientRect();
+                    const mouseX = e.clientX - rect.left;
+                    const mouseY = e.clientY - rect.top;
+
+                    transform.x = mouseX - (mouseX - transform.x) * (newK / transform.k);
+                    transform.y = mouseY - (mouseY - transform.y) * (newK / transform.k);
+                    transform.k = newK;
+
+                    g.setAttribute('transform', `translate(${transform.x}, ${transform.y}) scale(${transform.k})`);
+                });
+
+                svg.addEventListener('mousedown', (e) => {
+                    isDragging = true;
+                    const rect = svg.getBoundingClientRect();
+                    startX = (e.clientX - rect.left) - transform.x;
+                    startY = (e.clientY - rect.top) - transform.y;
+                });
+
+                svg.addEventListener('mousemove', (e) => {
+                    if (!isDragging) return;
+                    const rect = svg.getBoundingClientRect();
+                    transform.x = (e.clientX - rect.left) - startX;
+                    transform.y = (e.clientY - rect.top) - startY;
+                    g.setAttribute('transform', `translate(${transform.x}, ${transform.y}) scale(${transform.k})`);
+                });
+
+                svg.addEventListener('mouseup', () => isDragging = false);
+                svg.addEventListener('mouseleave', () => isDragging = false);
+            }
+
+            function initMapCanvas(titleText, metaText) {
+                const mapOverlay = document.getElementById('latent-map-overlay');
+                document.getElementById('map-title').innerText = titleText;
+                document.getElementById('map-meta').innerText = metaText;
+                
+                const svgContainer = document.getElementById('map-svg-container');
+                const width = svgContainer.clientWidth;
+                const height = svgContainer.clientHeight;
+
+                // Dynamically inject the 15-degree Cartesian Graticule
+                let gridLines = '';
+                for(let lon = 0; lon <= 360; lon += 15) {
+                    gridLines += `<line x1="${lon}" y1="0" x2="${lon}" y2="180" stroke="rgba(255,255,255,0.05)" stroke-width="0.2" />`;
+                }
+                for(let lat = 0; lat <= 180; lat += 15) {
+                    gridLines += `<line x1="0" y1="${lat}" x2="360" y2="${lat}" stroke="rgba(255,255,255,0.05)" stroke-width="0.2" />`;
+                }
+
+                // Base SVG structure mapping to exact 360x180 scale
+                let baseSVG = `
+                    <svg width="100%" height="100%" style="position:absolute; top:0; left:0; cursor: grab;" id="interactive-svg">
+                        <g id="map-zoom-group">
+                            <g transform="scale(${width/360}, ${height/180})">
+                                ${gridLines}
+                                <path fill="#1b263b" stroke="#415a77" stroke-width="0.3" stroke-linejoin="round" d="${WORLD_PATH}" />
+                            </g>
+                            </g>
+                    </svg>
+                `;
+                
+                svgContainer.innerHTML = baseSVG + '<div class="controls-hint">Scroll to Zoom | Drag to Pan</div>';
+                mapOverlay.classList.add('active');
+                
+                const svg = document.getElementById('interactive-svg');
+                const zoomGroup = document.getElementById('map-zoom-group');
+                attachCameraControls(svg, zoomGroup);
+
+                return { zoomGroup: zoomGroup, width: width, height: height };
+            }
+
+            function lonToX(lon, width) { return (parseFloat(lon) + 180) * (width / 360); }
+            function latToY(lat, height) { return (90 - parseFloat(lat)) * (height / 180); }
+
+            function processNodeDataToStr(node, width, height, drawnNodesSet, drawnArcsSet, isGlobal) {
+                let outSVG = '';
+                const originRaw = node.getAttribute('data-origin');
+                const coauthorsRaw = node.getAttribute('data-coauthors');
+                const talksRaw = node.getAttribute('data-talks');
+                
+                if (!originRaw) return '';
+
+                const opacity = isGlobal ? 0.3 : 0.6;
+                const strokeW = isGlobal ? 1 : 1.5;
+                const nodeRad = isGlobal ? 3 : 5;
+
+                // Draw Origin
+                const originParts = originRaw.split('|');
+                const originCoords = originParts[1].split(',');
+                const oX = lonToX(originCoords[0], width);
+                const oY = latToY(originCoords[1], height);
+                outSVG += drawGeoNode(oX, oY, originParts[0], '#ffeb3b', width, nodeRad, drawnNodesSet, isGlobal);
+
+                // Draw Coauthors
+                if (coauthorsRaw) {
+                    coauthorsRaw.split(';').forEach(c => {
+                        const parts = c.split(':');
+                        if(parts.length < 2) return;
+                        const name = parts[0];
+                        const locData = parts[1].split('|');
+                        const coords = locData[1].split(',');
+                        
+                        const tX = lonToX(coords[0], width);
+                        const tY = latToY(coords[1], height);
+                        
+                        outSVG += drawGeoArc(oX, oY, tX, tY, '#abefcd', width, false, opacity, strokeW, drawnArcsSet);
+                        outSVG += drawGeoNode(tX, tY, `${name} (${locData[0]})`, '#fff', width, nodeRad, drawnNodesSet, isGlobal);
+                    });
+                }
+
+                // Draw Talks
+                if (talksRaw) {
+                    talksRaw.split(';').forEach(t => {
+                        if(!t) return;
+                        const locData = t.split('|');
+                        const coords = locData[1].split(',');
+                        
+                        const tX = lonToX(coords[0], width);
+                        const tY = latToY(coords[1], height);
+                        
+                        outSVG += drawGeoArc(oX, oY, tX, tY, '#ff3366', width, true, opacity, strokeW, drawnArcsSet);
+                        outSVG += drawGeoNode(tX, tY, `Talk: ${locData[0]}`, '#ff3366', width, 4, drawnNodesSet, isGlobal);
+                    });
+                }
+
+                return outSVG;
+            }
+
+            function triggerLatentMap(node) {
+                const paperText = node.querySelector('em').innerText;
+                const year = node.getAttribute('data-year') || "Unknown Era";
+                const { zoomGroup, width, height } = initMapCanvas(paperText, `Temporal Node: ${year} | Cartographic Matrix`);
+                zoomGroup.innerHTML += processNodeDataToStr(node, width, height, new Set(), new Set(), false);
+            }
+
+            function triggerGlobalUnionMap() {
+                const { zoomGroup, width, height } = initMapCanvas("J. E. Pascoe - The Global Topology", "Union of all verifiable spatio-temporal nodes and lectures.");
+                let svgContent = '';
+                let globalNodesSet = new Set();
+                let globalArcsSet = new Set();
+                
+                document.querySelectorAll('.citation-list li').forEach(node => {
+                    svgContent += processNodeDataToStr(node, width, height, globalNodesSet, globalArcsSet, true);
+                });
+                zoomGroup.innerHTML += svgContent;
+            }
+
+            function drawGeoNode(x, y, label, color, svgWidth, radius, drawnSet, isGlobal) {
+                const coordKey = `${Math.round(x)},${Math.round(y)},${color}`;
+                if (drawnSet.has(coordKey)) return '';
+                drawnSet.add(coordKey);
+
+                let render = `<circle cx="${x}" cy="${y}" r="${radius}" fill="${color}" />`;
+                
+                if (!isGlobal) {
+                    const isLeft = x < svgWidth / 2;
+                    const textAnchor = isLeft ? "start" : "end";
+                    const xOffset = isLeft ? 8 : -8;
+                    render += `<text x="${x + xOffset}" y="${y + 3}" fill="${color}" font-family="monospace" font-size="10px" text-anchor="${textAnchor}" style="text-shadow: 1px 1px 2px #000, -1px -1px 2px #000;">${label}</text>`;
+                }
+                return render;
+            }
+
+            function drawGeoArc(x1, y1, x2, y2, color, svgWidth, dashed, opacity, strokeW, drawnSet) {
+                const arcKey = `${Math.round(x1)},${Math.round(y1)}-${Math.round(x2)},${Math.round(y2)}`;
+                if (drawnSet.has(arcKey)) return '';
+                drawnSet.add(arcKey);
+
+                let paths = [];
+
+                if (Math.abs(x2 - x1) > svgWidth / 2) {
+                    let x2_adj = x2 < x1 ? x2 + svgWidth : x2 - svgWidth;
+                    let x1_adj = x1 < x2 ? x1 + svgWidth : x1 - svgWidth;
+                    paths.push({xA: x1, yA: y1, xB: x2_adj, yB: y2});
+                    paths.push({xA: x1_adj, yA: y1, xB: x2, yB: y2});
+                } else {
+                    paths.push({xA: x1, yA: y1, xB: x2, yB: y2});
+                }
+
+                const dashArray = dashed ? 'stroke-dasharray="4,6"' : '';
+                let render = '';
+
+                paths.forEach(p => {
+                    const mx = (p.xA + p.xB) / 2;
+                    const my = (p.yA + p.yB) / 2;
+                    const dist = Math.sqrt((p.xB - p.xA)**2 + (p.yB - p.yA)**2);
+                    const lift = dist * 0.25; 
+                    const ctrlX = mx;
+                    const ctrlY = my - lift;
+                    render += `<path d="M ${p.xA} ${p.yA} Q ${ctrlX} ${ctrlY} ${p.xB} ${p.yB}" stroke="${color}" stroke-width="${strokeW}" fill="none" opacity="${opacity}" ${dashArray} />`;
+                });
+                
+                return render;
+            }
         })();
     </script>
 </body>
