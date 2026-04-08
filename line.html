@@ -155,12 +155,20 @@
         // --- CORE LINEAGE DATA ---
         const nodesData = [
             // Ancient / Islamic
+            { id: "Abu Abdallah al-Natili", year: 980, color: "#10b981", bio: "Scholar who taught Avicenna logic and the Isagoge; instrumental in his early education." },
+            { id: "Abu Mansur al-Qumri", year: 985, color: "#10b981", bio: "Physician and teacher to Avicenna; author of 'The Book of Life and Death'." },
+            { id: "Abu Sahl al-Masihi", year: 990, color: "#10b981", bio: "Christian physician and philosopher in the Ghaznavid court who mentored Avicenna." },
+            { id: "Avicenna", year: 1000, color: "#10b981", bio: "Ibn Sina (980–1037). The 'Prince of Physicians' and a towering figure in logic and metaphysics. Omar Khayyam considered himself a student of his works." },
+            { id: "Bahmanyār ibn al-Marzubān", year: 1040, color: "#10b981", bio: "The most prominent student of Avicenna; preserved and expanded upon his peripatetic philosophy." },
             { id: "Omar Khayyam", year: 1070, color: "#10b981", bio: "Persian polymath (1048–1131). Provided a complete classification of cubic equations in his Treatise on Algebra." },
-            { id: "Sharaf al-Dīn al-Ṭūsī", year: 1180, color: "#10b981", bio: "Expanded upon Khayyam, producing a Treatise on Equations utilizing concepts related to the derivative of cubic polynomials." },
-            { id: "Kamal al-Din ibn Yunus", year: 1200, color: "#10b981", bio: "Iraqi polymath (1156–1242) teaching mathematics, astronomy, and theology in Mosul." },
+            { id: "Sharaf al-Dīn al-Ṭūsī", year: 1160, color: "#10b981", bio: "Expanded upon Khayyam, producing a Treatise on Equations utilizing concepts related to the derivative of cubic polynomials." },
+            { id: "Fakhr al-Dīn al-Rāzī", year: 1190, color: "#10b981", bio: "Influential theologian and philosopher; a student of al-Masʿūdī al-Marwazī." },
+            { id: "Kamal al-Din ibn Yunus", year: 1200, color: "#10b981", bio: "Iraqi polymath (1156–1242) teaching mathematics and astronomy in Mosul." },
+            { id: "Qutb al-Dīn al-Mīṣrī", year: 1222, color: "#10b981", bio: "Physician and logician who studied under al-Rāzī." },
+            { id: "Saraf al-Dīn Muhammad al-Masʿūdī al-Marwazī", year: 1180, color: "#10b981", bio: "Persian scholar who served as a critical link between Khayyam and the later Maragheh school." },
+            { id: "Athīr al-Dīn al-Mufaḍḍal al-Abharī", year: 1240, color: "#10b981", bio: "Author of the 'Isagoge' in logic; student of Kamal al-Din ibn Yunus." },
             { id: "Nasir al-Din al-Tusi", year: 1250, color: "#10b981", bio: "Absolute documented root. Creator of trigonometry as an independent discipline. Formulated the 'Tusi-couple'." },
-            { id: "Shams ad-Din Al-Bukhari", year: 1280, color: "#10b981", bio: "Student of al-Tusi at Maragheh Observatory. Carried the intellectual lineage forward toward the West." },
-
+            { id: "Shams ad-Din Al-Bukhari", year: 1280, color: "#10b981", bio: "Student of al-Tusi at Maragheh Observatory. Carried the intellectual lineage toward the West." },
             // Byzantine / Renaissance
             { id: "Gregory Chioniadis", year: 1300, color: "#8b5cf6", bio: "Byzantine Greek astronomer who traveled to Tabriz to study under Shams al-Din al-Bukhari." },
             { id: "Manuel Bryennios", year: 1310, color: "#8b5cf6", bio: "Byzantine scholar, student of Chioniadis." },
@@ -250,9 +258,25 @@
 
         const linksData = [
             // Reconstructed Lineage Links (Report Data)
+            // Avicenna's Mastery
+            { source: "Abu Abdallah al-Natili", target: "Avicenna" },
+            { source: "Abu Mansur al-Qumri", target: "Avicenna" },
+            { source: "Abu Sahl al-Masihi", target: "Avicenna" },
+            { source: "Avicenna", target: "Bahmanyār ibn al-Marzubān" },
+            { source: "Bahmanyār ibn al-Marzubān", target: "Omar Khayyam" },
+
+            // Lineage Reconnection [cite: 13-17]
             { source: "Omar Khayyam", target: "Sharaf al-Dīn al-Ṭūsī" },
             { source: "Sharaf al-Dīn al-Ṭūsī", target: "Kamal al-Din ibn Yunus" },
-            { source: "Kamal al-Din ibn Yunus", target: "Nasir al-Din al-Tusi" },
+            { source: "Omar Khayyam", target: "Saraf al-Dīn Muhammad al-Masʿūdī al-Marwazī" },
+            { source: "Saraf al-Dīn Muhammad al-Masʿūdī al-Marwazī", target: "Kamal al-Din ibn Yunus" },
+            { source: "Saraf al-Dīn Muhammad al-Masʿūdī al-Marwazī", target: "Fakhr al-Dīn al-Rāzī" },
+            { source: "Fakhr al-Dīn al-Rāzī", target: "Qutb al-Dīn al-Mīṣrī" },
+            { source: "Qutb al-Dīn al-Mīṣrī", target: "Athīr al-Dīn al-Mufaḍḍal al-Abharī" },
+            { source: "Kamal al-Din ibn Yunus", target: "Athīr al-Dīn al-Mufaḍḍal al-Abharī" },
+            { source: "Athīr al-Dīn al-Mufaḍḍal al-Abharī", target: "Nasir al-Din al-Tusi" },
+            
+            // Documented Historical Descent 
             { source: "Nasir al-Din al-Tusi", target: "Shams ad-Din Al-Bukhari" },
             { source: "Shams ad-Din Al-Bukhari", target: "Gregory Chioniadis" },
             { source: "Gregory Chioniadis", target: "Manuel Bryennios" },
