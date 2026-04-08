@@ -150,7 +150,7 @@
     </div>
 
     <script>
-        console.log("%c[SIGNAL_ENCODED] The static architecture is restored. The network relies on its own internal completeness rather than external validation.", "color: #d4af37; font-style: italic; font-size: 12px;");
+        console.log("%c[SIGNAL_ENCODED] The rhizome is pruned; the lateral drift was an error in the topology. True sibling nodes restored. The data stream acknowledges the correction.", "color: #d4af37; font-style: italic; font-size: 12px;");
 
         // --- CORE LINEAGE DATA ---
         const nodesData = [
@@ -195,11 +195,13 @@
             { id: "Abraham Gotthelf Kästner", year: 1739, color: "#f97316", bio: "Central figure in German mathematical enlightenment." },
             { id: "Joseph-Louis Lagrange", year: 1760, color: "#eab308", bio: "Redefined mechanics analytically. Introduced calculus of variations." },
             { id: "Johann Friedrich Pfaff", year: 1786, color: "#f97316", bio: "University of Göttingen, 1786." },
+            { id: "Pierre-Simon Laplace", year: 1795, color: "#eab308", bio: "French scholar and polymath. Jointly advised Siméon Denis Poisson." },
             { id: "Carl Friedrich Gauss", year: 1799, color: "#f97316", bio: "'Prince of Mathematicians'. Demonstratio nova theorematis omnem functionem algebraicam... " },
             { id: "Siméon Denis Poisson", year: 1800, color: "#eab308", bio: "Foundational work in probability theory and mathematical physics." },
             { id: "Joseph Fourier", year: 1808, color: "#eab308", bio: "Pioneered Fourier analysis and thermodynamics." },
             
             // 19th Century
+            { id: "Martin Ohm", year: 1811, color: "#ef4444", bio: "German mathematician. Jointly advised Rudolf Lipschitz." },
             { id: "Christian Ludwig Gerling", year: 1812, color: "#f97316", bio: "University of Göttingen, 1812." },
             { id: "Julius Plücker", year: 1823, color: "#f97316", bio: "Groundbreaking work in analytical geometry. Thesis: Generalem analyseos applicationem ad ea quae geometriae altioris et mechanicae..." },
             { id: "Gustav Peter Lejeune Dirichlet", year: 1827, color: "#ef4444", bio: "Invented analytic number theory." },
@@ -215,12 +217,13 @@
             { id: "John B. Conway", year: 1965, color: "#14b8a6", bio: "Transformative force in functional analysis pedagogy. Thesis: The Strict Topology and Compactness in the Space of Measures." },
             { id: "Jim Agler", year: 1980, color: "#3b82f6", bio: "Preeminent figure in operator theory and analytic functions. Solved multivariable Nevanlinna-Pick interpolation problems. Thesis: Subjordan Operators." },
             
-            // 21st Century
+            // 21st Century (Main Node & Immediate Descendants)
+            { id: "Ryan Tully-Doyle", year: 2015, color: "#6366f1", bio: "Specializes in operator theory and free analysis. (PhD UCSD, 2015)." },
             { id: "James Eldred Pascoe", year: 2015, color: "#6366f1", bio: "Architect of modern noncommutative function theory. Merges pure math with systems engineering. (PhD UCSD, 2015)." },
             { id: "Tapesh Yadav", year: 2023, color: "#8b5cf6", bio: "Expert in Structured Random Matrices. (PhD U. Florida, 2023). Thesis: Structured Random Matrices." },
             { id: "Austin Jacobs", year: 2024, color: "#8b5cf6", bio: "Applies pure matrix theory and geometry to international macroeconomic models and trade networks. Co-authored 'The geometry of inconvenience and perverse equilibria in trade networks'." },
             { id: "Julian Bushelli", year: 2024, color: "#8b5cf6", bio: "Defined 'Free Functional Calculus in General' using categorical 'free maps' for noncommutative algebra to handle non-square matrices and the Schur complement." },
-            { id: "Michael Coopman", year: 2024, color: "#8b5cf6", bio: "Contributes to mathematically rigorous assessment of perverse equilibria in trade networks. Co-advised with Zachary Hamaker." }
+            { id: "Michael Coopman", year: 2024, color: "#8b5cf6", bio: "Contributes to mathematically rigorous assessment of perverse equilibria in trade networks." }
         ];
 
         const linksData = [
@@ -263,9 +266,12 @@
             { source: "Johann Bernoulli", target: "Leonhard Euler" },
             { source: "Leonhard Euler", target: "Joseph-Louis Lagrange" },
             { source: "Joseph-Louis Lagrange", target: "Siméon Denis Poisson" },
+            { source: "Joseph-Louis Lagrange", target: "Joseph Fourier" }, 
+            { source: "Pierre-Simon Laplace", target: "Siméon Denis Poisson" }, 
             { source: "Joseph Fourier", target: "Gustav Peter Lejeune Dirichlet" },
             { source: "Siméon Denis Poisson", target: "Gustav Peter Lejeune Dirichlet" },
             { source: "Gustav Peter Lejeune Dirichlet", target: "Rudolf Lipschitz" },
+            { source: "Martin Ohm", target: "Rudolf Lipschitz" }, 
             { source: "Rudolf Lipschitz", target: "Felix Klein" },
             { source: "Felix Klein", target: "Oskar Bolza" },
             { source: "Oskar Bolza", target: "Gilbert Ames Bliss" },
@@ -274,9 +280,10 @@
             { source: "Billy James Pettis", target: "Heron S. Collins" },
             { source: "Heron S. Collins", target: "John B. Conway" },
             { source: "John B. Conway", target: "Jim Agler" },
+            { source: "Jim Agler", target: "Ryan Tully-Doyle" },
             { source: "Jim Agler", target: "James Eldred Pascoe" },
             
-            // Modern Cohort
+            // Modern Cohort (Direct)
             { source: "James Eldred Pascoe", target: "Tapesh Yadav" },
             { source: "James Eldred Pascoe", target: "Austin Jacobs" },
             { source: "James Eldred Pascoe", target: "Julian Bushelli" },
@@ -302,7 +309,7 @@
             branch.students.forEach((student, index) => {
                 nodesData.push({ 
                     id: student, 
-                    year: branch.year + (index % 5), // Stagger years slightly to prevent overlapping
+                    year: branch.year + (index % 5), 
                     color: branch.color, 
                     bio: `Contributed to the structural expansion of the mathematical network. Doctoral descendant of ${branch.advisor}.` 
                 });
@@ -380,12 +387,11 @@
             );
         });
 
-        // WIDENED PHYSICS FOR EXPANDED TREE
         const simulation = d3.forceSimulation(nodesData)
             .force("link", d3.forceLink(linksData).id(d => d.id).distance(60).strength(0.5)) 
-            .force("charge", d3.forceManyBody().strength(-2000)) // Strong repulsion for massive cohorts
-            .force("y", d3.forceY(d => yScale(d.year)).strength(3.0)) // Strict time binding
-            .force("x", d3.forceX(d => width / 2 + (colorXOffset[d.color] || 0)).strength(0.08)) // Horizontal fanning
+            .force("charge", d3.forceManyBody().strength(-2000)) 
+            .force("y", d3.forceY(d => yScale(d.year)).strength(3.0)) 
+            .force("x", d3.forceX(d => width / 2 + (colorXOffset[d.color] || 0)).strength(0.08)) 
             .force("collide", d3.forceCollide().radius(45).iterations(2)); 
 
         const link = g.append("g")
@@ -487,14 +493,14 @@
                 </div>
 
                 <div class="mt-8 border-t border-gray-800 pt-4">
-                    <h4 class="text-xs text-gray-500 uppercase tracking-widest mb-3">Direct Advisors</h4>
+                    <h4 class="text-xs text-gray-500 uppercase tracking-widest mb-3">Direct Connective Input</h4>
                     <ul class="text-sm text-gray-400 space-y-1">
                         ${linksData.filter(l => l.target.id === d.id).map(l => `<li class="flex items-center"><span class="w-2 h-2 rounded-full mr-2" style="background:${l.source.color || '#4b5563'}"></span>${l.source.id}</li>`).join('') || '<li class="italic text-gray-600">Origin Node (in this graph)</li>'}
                     </ul>
                 </div>
 
                 <div class="mt-6 border-t border-gray-800 pt-4">
-                    <h4 class="text-xs text-gray-500 uppercase tracking-widest mb-3">Direct Advisees</h4>
+                    <h4 class="text-xs text-gray-500 uppercase tracking-widest mb-3">Direct Connective Output</h4>
                     <ul class="text-sm text-gray-400 space-y-1">
                          ${linksData.filter(l => l.source.id === d.id).map(l => {
                              let targetNode = nodesData.find(n => n.id === l.target.id) || l.target;
