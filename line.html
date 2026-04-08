@@ -40,8 +40,8 @@
 
         .link {
             stroke: #4b5563;
-            stroke-opacity: 0.6;
-            stroke-width: 1.5px;
+            stroke-opacity: 0.4;
+            stroke-width: 1px;
             fill: none;
             transition: stroke 0.3s, stroke-width 0.3s;
         }
@@ -49,7 +49,7 @@
         .link.highlighted {
             stroke: #d4af37;
             stroke-opacity: 1;
-            stroke-width: 3px;
+            stroke-width: 2.5px;
         }
 
         .node circle {
@@ -67,18 +67,19 @@
 
         .node text {
             font-family: 'Inter', sans-serif;
-            font-size: 11px;
+            font-size: 9px;
             font-weight: 400;
             pointer-events: none;
-            fill: #9ca3af;
+            fill: #6b7280;
             text-shadow: 0 1px 3px rgba(0,0,0,0.9);
-            transition: fill 0.3s;
+            transition: fill 0.3s, font-size 0.3s;
         }
 
         .node:hover text, .node.selected text {
             fill: #ffffff;
             font-weight: 600;
             font-size: 13px;
+            z-index: 10;
         }
 
         .node.selected circle {
@@ -88,7 +89,6 @@
             filter: drop-shadow(0 0 12px rgba(212, 175, 55, 1));
         }
 
-        /* Timeline Ruler Styling */
         .timeline-axis path, .timeline-axis line {
             stroke: #374151;
             stroke-width: 1px;
@@ -123,7 +123,6 @@
 <body class="flex h-screen w-screen overflow-hidden">
 
     <div id="graph-container" class="relative flex-grow h-full w-full">
-        <!-- Floating Header -->
         <div class="absolute top-0 right-0 p-6 pointer-events-none z-10 w-3/4 flex justify-end text-right">
             <div>
                 <h1 class="text-3xl font-bold text-white tracking-widest uppercase opacity-90 drop-shadow-md">The Stratigraphy of Thought</h1>
@@ -138,7 +137,6 @@
         <svg id="lineage-svg"></svg>
     </div>
 
-    <!-- Right Sidebar -->
     <div id="info-panel" class="absolute top-0 right-0 h-full w-96 flex flex-col z-20">
         <div class="p-6 border-b border-gray-800 flex justify-between items-center bg-black">
             <h2 class="title-font text-xl text-yellow-500 tracking-wide">Academic Record</h2>
@@ -148,86 +146,85 @@
         </div>
         
         <div class="flex-grow overflow-y-auto p-6" id="panel-content">
-            <!-- Dynamic Content -->
-        </div>
+            </div>
     </div>
 
     <script>
-        console.log("%c[SIGNAL_ENCODED] Time is linear, but human thought meanders. The rigid straight line failed to account for geographic and philosophical migration. The horizontal axis has been explicitly mapped to the cultural epochs (represented by node color). The timeline now flows like a watershed, shifting east to west as empires of thought rise and fall.", "color: #d4af37; font-style: italic; font-size: 12px;");
+        console.log("%c[SIGNAL_ENCODED] The static architecture is restored. The network relies on its own internal completeness rather than external validation.", "color: #d4af37; font-style: italic; font-size: 12px;");
 
-        // --- DATA DEFINITION: EXACT YEARS ---
+        // --- CORE LINEAGE DATA ---
         const nodesData = [
             // Ancient / Islamic
             { id: "Omar Khayyam", year: 1070, color: "#10b981", bio: "Persian polymath (1048–1131). Provided a complete classification of cubic equations in his Treatise on Algebra." },
             { id: "Sharaf al-Dīn al-Ṭūsī", year: 1180, color: "#10b981", bio: "Expanded upon Khayyam, producing a Treatise on Equations utilizing concepts related to the derivative of cubic polynomials." },
             { id: "Kamal al-Din ibn Yunus", year: 1200, color: "#10b981", bio: "Iraqi polymath (1156–1242) teaching mathematics, astronomy, and theology in Mosul." },
-            { id: "Nasir al-Din al-Tusi", year: 1250, color: "#10b981", bio: "Creator of trigonometry as an independent discipline. Formulated the 'Tusi-couple' critical to future heliocentric models." },
-            { id: "Shams ad-Din Al-Bukhari", year: 1280, color: "#10b981", bio: "Carried the intellectual lineage forward toward the West, advising Gregory Chioniadis." },
+            { id: "Nasir al-Din al-Tusi", year: 1250, color: "#10b981", bio: "Creator of trigonometry as an independent discipline. Formulated the 'Tusi-couple'." },
+            { id: "Shams ad-Din Al-Bukhari", year: 1280, color: "#10b981", bio: "Carried the intellectual lineage forward toward the West." },
 
             // Byzantine / Renaissance
-            { id: "Gregory Chioniadis", year: 1300, color: "#8b5cf6", bio: "Byzantine Greek astronomer (1240–1320) who traveled through Persia to study mathematics and science." },
+            { id: "Gregory Chioniadis", year: 1300, color: "#8b5cf6", bio: "Byzantine Greek astronomer." },
             { id: "Manuel Bryennios", year: 1310, color: "#8b5cf6", bio: "Byzantine scholar, student of Chioniadis." },
             { id: "Theodore Metochites", year: 1320, color: "#8b5cf6", bio: "Byzantine statesman and scholar." },
             { id: "Gregory Palamas", year: 1340, color: "#8b5cf6", bio: "Prominent theologian and scholar." },
             { id: "Nilos Kabasilas", year: 1350, color: "#8b5cf6", bio: "Byzantine intellectual." },
             { id: "Demetrios Kydones", year: 1370, color: "#8b5cf6", bio: "Theologian and translator." },
             { id: "Georgios Plethon Gemistos", year: 1410, color: "#8b5cf6", bio: "Late Byzantine scholar and philosopher." },
-            { id: "Basilios Bessarion", year: 1440, color: "#ec4899", bio: "Greek scholar (1403–1472) who immigrated to Italy, bringing ancient Greek manuscripts and seeding the Renaissance." },
+            { id: "Basilios Bessarion", year: 1440, color: "#ec4899", bio: "Greek scholar. Brought ancient Greek manuscripts, seeding the Renaissance." },
             { id: "Johannes Müller Regiomontanus", year: 1460, color: "#ec4899", bio: "Brilliant Renaissance astronomer." },
-            { id: "Domenico Maria Novara da Ferrara", year: 1490, color: "#ec4899", bio: "Professor at the University of Bologna, advisor to Nicolaus Copernicus." },
+            { id: "Domenico Maria Novara da Ferrara", year: 1490, color: "#ec4899", bio: "Professor at the University of Bologna." },
             { id: "Nicolaus Copernicus", year: 1520, color: "#ec4899", bio: "Legendary astronomer who formulated the heliocentric model of the universe." },
-            { id: "Georg Joachim von Leuchen Rheticus", year: 1540, color: "#ec4899", bio: "Published the first highly accurate trigonometric tables. Carried lineage to Germany." },
+            { id: "Georg Joachim von Leuchen Rheticus", year: 1540, color: "#ec4899", bio: "Published the first highly accurate trigonometric tables." },
             
             // German Roots
             { id: "Moritz Valentin Steinmetz", year: 1560, color: "#ec4899", bio: "German mathematician." },
             { id: "Christoph Meurer", year: 1580, color: "#ec4899", bio: "German scholar." },
             { id: "Philipp Müller", year: 1610, color: "#ec4899", bio: "Advisor to Erhard Weigel." },
-            
-            { id: "Friedrich Leibniz", year: 1622, color: "#f97316", bio: "Completed academic work at Leipzig in 1622. (Father of Gottfried Wilhelm Leibniz)." },
-            { id: "Jakob Thomasius", year: 1643, color: "#f97316", bio: "Towering figure in German philosophy (Leipzig 1643)." },
-            { id: "Erhard Weigel", year: 1650, color: "#ef4444", bio: "Professor at Jena University (PhD Leipzig, 1650). Championed mathematical logic in philosophy. Advised Leibniz." },
-            { id: "Otto Mencke", year: 1665, color: "#f97316", bio: "Founded the Acta Eruditorum, first scientific journal in German-speaking world (1665)." },
-            { id: "Gottfried Wilhelm Leibniz", year: 1666, color: "#3b82f6", bio: "Polymath who independently developed infinitesimal calculus. PhD Altdorf 1666. Advised by Weigel." },
-            { id: "Nicolas Malebranche", year: 1675, color: "#3b82f6", bio: "French philosopher who synthesized Cartesian philosophy with rigorous rationalism. Advised by Leibniz." },
-            { id: "Jacob Bernoulli", year: 1684, color: "#3b82f6", bio: "Pioneer in calculus and founder of modern probability theory. Co-advised by Leibniz and Malebranche." },
+            { id: "Friedrich Leibniz", year: 1622, color: "#f97316", bio: "Completed academic work at Leipzig in 1622." },
+            { id: "Jakob Thomasius", year: 1643, color: "#f97316", bio: "Towering figure in German philosophy." },
+            { id: "Erhard Weigel", year: 1650, color: "#ef4444", bio: "Professor at Jena University. Championed mathematical logic." },
+            { id: "Otto Mencke", year: 1665, color: "#f97316", bio: "Founded the Acta Eruditorum." },
+            { id: "Gottfried Wilhelm Leibniz", year: 1666, color: "#3b82f6", bio: "Polymath who independently developed infinitesimal calculus. Thesis: Disputatio inauguralis de casibus perplexis in jure." },
+            { id: "Nicolas Malebranche", year: 1675, color: "#3b82f6", bio: "Synthesized Cartesian philosophy with rigorous rationalism." },
+            { id: "Jacob Bernoulli", year: 1684, color: "#3b82f6", bio: "Pioneer in calculus and founder of modern probability theory. Thesis: Solutionem tergemini problematis arithmetici, geometrici et astronomici." },
             { id: "Johann Christoph Wichmannshausen", year: 1685, color: "#f97316", bio: "Leipzig, 1685." },
-            { id: "Johann Bernoulli", year: 1690, color: "#3b82f6", bio: "The 'Archimedes of his age'. Solved the brachistochrone problem." },
+            { id: "Johann Bernoulli", year: 1690, color: "#3b82f6", bio: "The 'Archimedes of his age'. Thesis: Dissertatio de effervescentia et fermentatione." },
             
             // 18th Century
-            { id: "Christian August Hausen", year: 1713, color: "#f97316", bio: "Bridged math and early physics, particularly electricity (1713)." },
-            { id: "Leonhard Euler", year: 1726, color: "#3b82f6", bio: "Most prolific mathematician in history. Systematized calculus and complex analysis." },
-            { id: "Abraham Gotthelf Kästner", year: 1739, color: "#f97316", bio: "Central figure in German mathematical enlightenment (1739)." },
+            { id: "Christian August Hausen", year: 1713, color: "#f97316", bio: "Bridged math and early physics." },
+            { id: "Leonhard Euler", year: 1726, color: "#3b82f6", bio: "Most prolific mathematician in history. Thesis: Dissertatio physica de sono." },
+            { id: "Abraham Gotthelf Kästner", year: 1739, color: "#f97316", bio: "Central figure in German mathematical enlightenment." },
             { id: "Joseph-Louis Lagrange", year: 1760, color: "#eab308", bio: "Redefined mechanics analytically. Introduced calculus of variations." },
             { id: "Johann Friedrich Pfaff", year: 1786, color: "#f97316", bio: "University of Göttingen, 1786." },
-            { id: "Carl Friedrich Gauss", year: 1799, color: "#f97316", bio: "'Prince of Mathematicians'. Revolutionized number theory, statistics, geometry." },
+            { id: "Carl Friedrich Gauss", year: 1799, color: "#f97316", bio: "'Prince of Mathematicians'. Demonstratio nova theorematis omnem functionem algebraicam... " },
             { id: "Siméon Denis Poisson", year: 1800, color: "#eab308", bio: "Foundational work in probability theory and mathematical physics." },
+            { id: "Joseph Fourier", year: 1808, color: "#eab308", bio: "Pioneered Fourier analysis and thermodynamics." },
             
             // 19th Century
-            { id: "Joseph Fourier", year: 1808, color: "#eab308", bio: "Pioneered Fourier analysis and thermodynamics. Co-advised Dirichlet." },
             { id: "Christian Ludwig Gerling", year: 1812, color: "#f97316", bio: "University of Göttingen, 1812." },
-            { id: "Julius Plücker", year: 1823, color: "#f97316", bio: "Groundbreaking work in analytical geometry and physics. Co-advised Felix Klein." },
-            { id: "Gustav Peter Lejeune Dirichlet", year: 1827, color: "#ef4444", bio: "Bridge between French analysis and German rigor. Invented analytic number theory." },
-            { id: "Rudolf Lipschitz", year: 1853, color: "#ef4444", bio: "Enduring legacy in 'Lipschitz continuity', ensuring uniqueness of solutions to differential equations." },
-            { id: "Felix Klein", year: 1868, color: "#ef4444", bio: "Author of the Erlanger Programm, unifying geometry via group theory. Co-advised by Lipschitz and Plücker." },
-            { id: "Oskar Bolza", year: 1886, color: "#06b6d4", bio: "Transplanted German rigor to the US. Built University of Chicago's math department." },
+            { id: "Julius Plücker", year: 1823, color: "#f97316", bio: "Groundbreaking work in analytical geometry. Thesis: Generalem analyseos applicationem ad ea quae geometriae altioris et mechanicae..." },
+            { id: "Gustav Peter Lejeune Dirichlet", year: 1827, color: "#ef4444", bio: "Invented analytic number theory." },
+            { id: "Rudolf Lipschitz", year: 1853, color: "#ef4444", bio: "Enduring legacy in 'Lipschitz continuity'. Thesis: Determinatio status magnetici viribus inducentibus commoti in ellipsoide." },
+            { id: "Felix Klein", year: 1868, color: "#ef4444", bio: "Author of the Erlanger Programm. Thesis: Über die Transformation de allgemeinen Gleichung des zweiten Grades zwischen Linien-Koordinaten auf eine kanonische Form." },
+            { id: "Oskar Bolza", year: 1886, color: "#06b6d4", bio: "Transplanted German rigor to the US. Thesis: Über die Reduction hyperelliptischer Integrale erster Ordnung und erster Gattung auf elliptische, insbesondere über die Reduction durch eine Transformation vierten Grades." },
             
             // 20th Century
-            { id: "Gilbert Ames Bliss", year: 1900, color: "#06b6d4", bio: "Master of calculus of variations. Applied theories to exterior ballistics in WWI." },
-            { id: "Edward J. McShane", year: 1930, color: "#06b6d4", bio: "Expanded calculus of variations into integration theory and stochastic processes." },
-            { id: "Billy James Pettis", year: 1937, color: "#14b8a6", bio: "Pioneer of abstract functional analysis. Formulated the Pettis integral." },
-            { id: "Heron S. Collins", year: 1953, color: "#14b8a6", bio: "Dedicated to topological vector spaces and strict topology. Advised John B. Conway." },
-            { id: "John B. Conway", year: 1965, color: "#14b8a6", bio: "Transformative force in functional analysis pedagogy. Expert on subnormal operators." },
-            { id: "Jim Agler", year: 1980, color: "#3b82f6", bio: "Preeminent figure in operator theory and analytic functions. Solved multivariable Nevanlinna-Pick interpolation problems." },
+            { id: "Gilbert Ames Bliss", year: 1900, color: "#06b6d4", bio: "Master of calculus of variations. Applied theories to exterior ballistics in WWI. Thesis: The Geodesic Lines on the Anchor Ring." },
+            { id: "Edward J. McShane", year: 1930, color: "#06b6d4", bio: "Expanded calculus of variations into integration theory. Thesis: Existence Theorems for Ordinary Problems of the Calculus of Variations." },
+            { id: "Billy James Pettis", year: 1937, color: "#14b8a6", bio: "Pioneer of abstract functional analysis. Formulated the Pettis integral. Thesis: Integration in Vector Spaces." },
+            { id: "Heron S. Collins", year: 1953, color: "#14b8a6", bio: "Dedicated to topological vector spaces and strict topology." },
+            { id: "John B. Conway", year: 1965, color: "#14b8a6", bio: "Transformative force in functional analysis pedagogy. Thesis: The Strict Topology and Compactness in the Space of Measures." },
+            { id: "Jim Agler", year: 1980, color: "#3b82f6", bio: "Preeminent figure in operator theory and analytic functions. Solved multivariable Nevanlinna-Pick interpolation problems. Thesis: Subjordan Operators." },
             
             // 21st Century
             { id: "James Eldred Pascoe", year: 2015, color: "#6366f1", bio: "Architect of modern noncommutative function theory. Merges pure math with systems engineering. (PhD UCSD, 2015)." },
-            { id: "Tapesh Yadav", year: 2023, color: "#8b5cf6", bio: "Expert in Structured Random Matrices and Agler-Young class. (PhD U. Florida, 2023)." },
-            { id: "Austin Jacobs", year: 2024, color: "#8b5cf6", bio: "Applies pure matrix theory and geometry to international macroeconomic models and trade networks." },
-            { id: "Julian Bushelli", year: 2024, color: "#8b5cf6", bio: "Defined 'Free Functional Calculus in General' using categorical 'free maps' for noncommutative algebra." },
+            { id: "Tapesh Yadav", year: 2023, color: "#8b5cf6", bio: "Expert in Structured Random Matrices. (PhD U. Florida, 2023). Thesis: Structured Random Matrices." },
+            { id: "Austin Jacobs", year: 2024, color: "#8b5cf6", bio: "Applies pure matrix theory and geometry to international macroeconomic models and trade networks. Co-authored 'The geometry of inconvenience and perverse equilibria in trade networks'." },
+            { id: "Julian Bushelli", year: 2024, color: "#8b5cf6", bio: "Defined 'Free Functional Calculus in General' using categorical 'free maps' for noncommutative algebra to handle non-square matrices and the Schur complement." },
             { id: "Michael Coopman", year: 2024, color: "#8b5cf6", bio: "Contributes to mathematically rigorous assessment of perverse equilibria in trade networks. Co-advised with Zachary Hamaker." }
         ];
 
         const linksData = [
+            // Primary Lineage Links
             { source: "Omar Khayyam", target: "Sharaf al-Dīn al-Ṭūsī" },
             { source: "Sharaf al-Dīn al-Ṭūsī", target: "Kamal al-Din ibn Yunus" },
             { source: "Kamal al-Din ibn Yunus", target: "Nasir al-Din al-Tusi" },
@@ -248,7 +245,6 @@
             { source: "Moritz Valentin Steinmetz", target: "Christoph Meurer" },
             { source: "Christoph Meurer", target: "Philipp Müller" },
             { source: "Philipp Müller", target: "Erhard Weigel" },
-            
             { source: "Friedrich Leibniz", target: "Jakob Thomasius" },
             { source: "Jakob Thomasius", target: "Otto Mencke" },
             { source: "Otto Mencke", target: "Johann Christoph Wichmannshausen" },
@@ -259,7 +255,6 @@
             { source: "Carl Friedrich Gauss", target: "Christian Ludwig Gerling" },
             { source: "Christian Ludwig Gerling", target: "Julius Plücker" },
             { source: "Julius Plücker", target: "Felix Klein" },
-
             { source: "Erhard Weigel", target: "Gottfried Wilhelm Leibniz" },
             { source: "Gottfried Wilhelm Leibniz", target: "Nicolas Malebranche" },
             { source: "Gottfried Wilhelm Leibniz", target: "Jacob Bernoulli" },
@@ -267,13 +262,11 @@
             { source: "Jacob Bernoulli", target: "Johann Bernoulli" },
             { source: "Johann Bernoulli", target: "Leonhard Euler" },
             { source: "Leonhard Euler", target: "Joseph-Louis Lagrange" },
-            
             { source: "Joseph-Louis Lagrange", target: "Siméon Denis Poisson" },
             { source: "Joseph Fourier", target: "Gustav Peter Lejeune Dirichlet" },
             { source: "Siméon Denis Poisson", target: "Gustav Peter Lejeune Dirichlet" },
             { source: "Gustav Peter Lejeune Dirichlet", target: "Rudolf Lipschitz" },
             { source: "Rudolf Lipschitz", target: "Felix Klein" },
-
             { source: "Felix Klein", target: "Oskar Bolza" },
             { source: "Oskar Bolza", target: "Gilbert Ames Bliss" },
             { source: "Gilbert Ames Bliss", target: "Edward J. McShane" },
@@ -283,15 +276,41 @@
             { source: "John B. Conway", target: "Jim Agler" },
             { source: "Jim Agler", target: "James Eldred Pascoe" },
             
+            // Modern Cohort
             { source: "James Eldred Pascoe", target: "Tapesh Yadav" },
             { source: "James Eldred Pascoe", target: "Austin Jacobs" },
             { source: "James Eldred Pascoe", target: "Julian Bushelli" },
             { source: "James Eldred Pascoe", target: "Michael Coopman" }
         ];
 
+        // --- EXTENDED BRANCHES (THE WIDENING) ---
+        const extendedBranches = [
+            { advisor: "Johann Bernoulli", year: 1720, color: "#3b82f6", students: ["Nicolaus II Bernoulli", "Daniel Bernoulli", "Johann II Bernoulli"] },
+            { advisor: "Joseph-Louis Lagrange", year: 1810, color: "#eab308", students: ["Giovanni Plana"] },
+            { advisor: "Siméon Denis Poisson", year: 1825, color: "#eab308", students: ["Michel Chasles", "Joseph Liouville", "Nicolas Léonard Sadi Carnot"] },
+            { advisor: "Gustav Peter Lejeune Dirichlet", year: 1855, color: "#ef4444", students: ["Moritz Cantor", "Gotthold Eisenstein", "Leopold Kronecker", "Carl Wilhelm Borchardt", "Bernhard Riemann", "Ludwig Schläfli", "Wilhelm Weber", "Elwin Bruno Christoffel", "Richard Dedekind", "Alfred Enneper", "Eduard Heine", "Ludwig von Seidel", "Julius Weingarten"] },
+            { advisor: "Felix Klein", year: 1895, color: "#ef4444", students: ["Ferdinand von Lindemann", "Ludwig Bieberbach", "Maxime Bôcher", "Max Brückner", "Frank Nelson Cole", "Friedrich Dingeldey", "Henry B. Fine", "Erwin Freundlich", "Robert Fricke", "Axel Harnack", "Mellen Haskell", "Alexander Ostrowski", "Julio Rey Pastor", "Hermann Rothe", "Friedrich Schilling", "Virgil Snyder", "Edward Van Vleck", "Walther von Dyck", "Philipp Furtwängler", "Adolf Hurwitz", "Edward Kasner"] },
+            { advisor: "Oskar Bolza", year: 1905, color: "#06b6d4", students: ["John Hector McDonald", "William Gillespie", "Arnold Dresden", "John Irwin Hutchinson", "George Lincoln Brown", "Buzz M. Walker", "Anthony Lispenard Underhill", "Norman Richard Wilson", "Mary Emily Sinclair"] },
+            { advisor: "Gilbert Ames Bliss", year: 1925, color: "#06b6d4", students: ["Lloyd Dines", "Moffatt Grier Boyce", "Gillie Larew", "Egbert J. Miles", "D. M. Smith", "Charles Albert Fischer", "James Henry Taylor", "William Vernon Lovitt", "Marion Elizabeth Stark", "Archibald Shepard Merrill", "Lincoln LaPaz", "Evelyn Prescott Wiggin", "Magnus Hestenes", "Ross Harvey Bardell", "Alston Scott Householder", "Nathan Abraham Moscovitch", "Lawrence Murray Graves", "Frederick A. Valentine", "Edward Alfred Nordhaus", "Carl Herbert Denbow", "Carroll Parker Brady", "Aline Huke Frink", "Aubrey Wilfred Landers, Jr.", "Elizabeth LeStourgeon", "Mary Kenny Landers", "Isaac Albert Barnett", "Ellen Clayton Stokes", "Marion Ballantyne White", "William Larkin Duren, Jr."] },
+            { advisor: "Edward J. McShane", year: 1955, color: "#06b6d4", students: ["Victor Klee", "Eugene Kerfoot Ritter", "David Barrington Lowdenslager", "Samuel Henry Coleman", "Allan Morton Krall", "Sidney Herbert Lawrence", "Barbara Louise Slyder Rice", "Albert Beauregard Schwarzkopf", "Truman Arthur Botts"] },
+            { advisor: "John B. Conway", year: 1985, color: "#14b8a6", students: ["Karim Seddighi", "Marc Raphael", "Gregory T. Adams", "John Stephen Spraker", "John Richard Akeroyd", "Quentin F. Stout", "Ameer Sadashiv Athavale", "Steve Wright", "James Dudziak", "Pei Yuan Wu", "Norma Salem Elias", "Nathan Stephen Feldman", "Kyung-Hee Jin", "Gabriel Titu Prajitura", "Gerard Eugene Keough", "Donna Sharon Husch", "Paul Joseph McGuire", "Tracie McLemore Salinas", "Robert Floyd Olin", "Sherwin Kouchekian-Sabour"] },
+            { advisor: "Jim Agler", year: 2000, color: "#3b82f6", students: ["Linda Jeanne Patton", "Edwin Samuel Franks", "Siamak Hashemi-Asasi", "John Ro Harland", "Mark Stankus", "Scott A. McCullough", "Benjamin J. Raphael", "David Scheinker"] }
+        ];
+
+        // Process extended branches into the main data structures
+        extendedBranches.forEach(branch => {
+            branch.students.forEach((student, index) => {
+                nodesData.push({ 
+                    id: student, 
+                    year: branch.year + (index % 5), // Stagger years slightly to prevent overlapping
+                    color: branch.color, 
+                    bio: `Contributed to the structural expansion of the mathematical network. Doctoral descendant of ${branch.advisor}.` 
+                });
+                linksData.push({ source: branch.advisor, target: student });
+            });
+        });
+
         // --- HORIZONTAL GEOGRAPHIC/PHILOSOPHICAL MAPPING ---
-        // We use the node's category color as a proxy to define its longitudinal shift.
-        // This spreads the network organically, tracing the migration of the discipline.
         const colorXOffset = {
             "#10b981": -300, // Islamic Golden Age (East)
             "#8b5cf6": -150, // Byzantine / Contemp (Migrating West)
@@ -305,14 +324,10 @@
             "#6366f1": 0     // Modern Contemporary Synthesis (Center)
         };
 
-        // Layout Constants
         const width = window.innerWidth;
         const height = window.innerHeight;
-        
-        // Deep timeline for vertical descent
-        const timelineHeight = 10000; 
+        const timelineHeight = 12000; 
 
-        // STRICT Y-SCALE: Maps exact year to Y coordinate.
         const yScale = d3.scaleLinear()
             .domain([1000, 2050])
             .range([100, timelineHeight - 300]);
@@ -320,16 +335,15 @@
         const svg = d3.select("#lineage-svg")
             .attr("viewBox", [0, 0, width, height]);
 
-        // Arrow markers
         svg.append("defs").selectAll("marker")
             .data(["arrow"])
             .enter().append("marker")
             .attr("id", String)
             .attr("viewBox", "0 -5 10 10")
-            .attr("refX", 22) 
+            .attr("refX", 18) 
             .attr("refY", 0)
-            .attr("markerWidth", 8) 
-            .attr("markerHeight", 8) 
+            .attr("markerWidth", 6) 
+            .attr("markerHeight", 6) 
             .attr("orient", "auto")
             .append("path")
             .attr("fill", "#6b7280") 
@@ -337,52 +351,42 @@
 
         const g = svg.append("g");
         
-        // Vertical Timeline Axis pinned to the left
         const yAxisG = svg.append("g")
             .attr("class", "timeline-axis")
             .attr("transform", `translate(80, 0)`);
 
         const zoom = d3.zoom()
-            .scaleExtent([0.1, 4])
+            .scaleExtent([0.05, 4])
             .on("zoom", (event) => {
                 g.attr("transform", event.transform);
-                
-                // Dynamically rescale the vertical axis to show actual years
                 const currentYScale = event.transform.rescaleY(yScale);
                 yAxisG.call(
                     d3.axisLeft(currentYScale)
-                    .ticks(20)
-                    .tickFormat(d3.format("d")) // Remove commas from years (e.g. 1,900 -> 1900)
+                    .ticks(25)
+                    .tickFormat(d3.format("d")) 
                     .tickSize(-20)
                 );
             });
         
         svg.call(zoom);
 
-        // Reset View logic
         d3.select('#reset-zoom').on('click', () => {
             d3.selectAll('.node').classed('selected', false).style("opacity", 1);
-            d3.selectAll('.link').classed('highlighted', false).style("opacity", 0.6);
+            d3.selectAll('.link').classed('highlighted', false).style("opacity", 0.4);
             panel.classList.remove('open');
-
-            // Reset camera to top of the timeline, zoomed out slightly to see the horizontal spread
             svg.transition().duration(750).call(
                 zoom.transform, 
-                d3.zoomIdentity.translate(width/2, 50).scale(0.6)
+                d3.zoomIdentity.translate(width/2, 50).scale(0.4)
             );
         });
 
-        // Initialize simulation
+        // WIDENED PHYSICS FOR EXPANDED TREE
         const simulation = d3.forceSimulation(nodesData)
-            // Pull connected nodes together with a relaxed distance to allow horizontal swaying
-            .force("link", d3.forceLink(linksData).id(d => d.id).distance(40).strength(0.8))
-            // Push nodes apart so names definitely don't overlap
-            .force("charge", d3.forceManyBody().strength(-1200))
-            // ABSOLUTE GRAVITY: strictly binds nodes to their actual year vertically
-            .force("y", d3.forceY(d => yScale(d.year)).strength(2.5))
-            // GEOGRAPHIC MIGRATION: Applies a subtle horizontal pull based on their academic school
-            .force("x", d3.forceX(d => width / 2 + (colorXOffset[d.color] || 0)).strength(0.15))
-            .force("collide", d3.forceCollide().radius(30));
+            .force("link", d3.forceLink(linksData).id(d => d.id).distance(60).strength(0.5)) 
+            .force("charge", d3.forceManyBody().strength(-2000)) // Strong repulsion for massive cohorts
+            .force("y", d3.forceY(d => yScale(d.year)).strength(3.0)) // Strict time binding
+            .force("x", d3.forceX(d => width / 2 + (colorXOffset[d.color] || 0)).strength(0.08)) // Horizontal fanning
+            .force("collide", d3.forceCollide().radius(45).iterations(2)); 
 
         const link = g.append("g")
             .attr("class", "links")
@@ -404,38 +408,31 @@
                 .on("end", dragended));
 
         node.append("circle")
-            .attr("r", 12)
+            .attr("r", 8) 
             .attr("fill", d => d.color);
 
         node.append("text")
-            .attr("dx", 18)
+            .attr("dx", 14)
             .attr("dy", ".35em")
             .text(d => d.id);
 
         simulation.on("tick", () => {
             link.attr("d", d => {
-                // Strict linear vectors to prevent topological loops
                 return `M${d.source.x},${d.source.y} L${d.target.x},${d.target.y}`;
             });
-
             node.attr("transform", d => `translate(${d.x},${d.y})`);
         });
 
-        // Drag physics 
         function dragstarted(event, d) {
             if (!event.active) simulation.alphaTarget(0.3).restart();
             d.fx = d.x;
         }
-        function dragged(event, d) {
-            d.fx = event.x; 
-            // We ignore event.dy to enforce strict time continuity
-        }
+        function dragged(event, d) { d.fx = event.x; }
         function dragended(event, d) {
             if (!event.active) simulation.alphaTarget(0);
             d.fx = null;
         }
 
-        // --- Interaction Logic (Panel) ---
         const panel = document.getElementById('info-panel');
         const panelContent = document.getElementById('panel-content');
         const closeBtn = document.getElementById('close-panel');
@@ -472,42 +469,45 @@
             const descendants = getDescendants(d.id);
             const lineageSet = new Set([...ancestors, ...descendants, d.id]);
 
-            node.style("opacity", n => lineageSet.has(n.id) ? 1 : 0.15);
+            node.style("opacity", n => lineageSet.has(n.id) ? 1 : 0.05);
             link.classed("highlighted", l => lineageSet.has(l.source.id) && lineageSet.has(l.target.id));
-            link.style("opacity", l => (lineageSet.has(l.source.id) && lineageSet.has(l.target.id)) ? 1 : 0.05);
+            link.style("opacity", l => (lineageSet.has(l.source.id) && lineageSet.has(l.target.id)) ? 1 : 0.02);
 
             const groupColor = d.color;
             panelContent.innerHTML = `
                 <div class="mb-4">
                     <span class="inline-block px-2 py-1 text-[10px] font-bold tracking-wider rounded mb-2" style="background-color: ${groupColor}33; color: ${groupColor}; border: 1px solid ${groupColor}">
-                        YEAR: ${d.year}
+                        EST. YEAR: ${d.year}
                     </span>
                     <h3 class="title-font text-2xl text-white font-bold mb-1">${d.id}</h3>
                 </div>
                 
-                <div class="prose prose-invert prose-sm">
+                <div class="prose prose-invert prose-sm mt-4">
                     <p class="text-gray-300 leading-relaxed font-light">${d.bio}</p>
                 </div>
 
                 <div class="mt-8 border-t border-gray-800 pt-4">
                     <h4 class="text-xs text-gray-500 uppercase tracking-widest mb-3">Direct Advisors</h4>
                     <ul class="text-sm text-gray-400 space-y-1">
-                        ${linksData.filter(l => l.target.id === d.id).map(l => `<li class="flex items-center"><span class="w-2 h-2 rounded-full mr-2" style="background:${l.source.color}"></span>${l.source.id}</li>`).join('') || '<li class="italic text-gray-600">Origin Node (in this graph)</li>'}
+                        ${linksData.filter(l => l.target.id === d.id).map(l => `<li class="flex items-center"><span class="w-2 h-2 rounded-full mr-2" style="background:${l.source.color || '#4b5563'}"></span>${l.source.id}</li>`).join('') || '<li class="italic text-gray-600">Origin Node (in this graph)</li>'}
                     </ul>
                 </div>
 
                 <div class="mt-6 border-t border-gray-800 pt-4">
                     <h4 class="text-xs text-gray-500 uppercase tracking-widest mb-3">Direct Advisees</h4>
                     <ul class="text-sm text-gray-400 space-y-1">
-                         ${linksData.filter(l => l.source.id === d.id).map(l => `<li class="flex items-center"><span class="w-2 h-2 rounded-full mr-2" style="background:${l.target.color}"></span>${l.target.id}</li>`).join('') || '<li class="italic text-gray-600">Current Generation</li>'}
+                         ${linksData.filter(l => l.source.id === d.id).map(l => {
+                             let targetNode = nodesData.find(n => n.id === l.target.id) || l.target;
+                             let targetColor = targetNode.color || '#4b5563';
+                             return `<li class="flex items-center"><span class="w-2 h-2 rounded-full mr-2" style="background:${targetColor}"></span>${targetNode.id || l.target}</li>`;
+                         }).join('') || '<li class="italic text-gray-600">Current Generation</li>'}
                     </ul>
                 </div>
             `;
             
             panel.classList.add('open');
             
-            // Pan to center the selected node vertically
-            const scale = 1.2;
+            const scale = 1.0;
             svg.transition().duration(750).call(
                 zoom.transform, 
                 d3.zoomIdentity.translate(width / 2 - d.x * scale, height / 3 - d.y * scale).scale(scale)
@@ -517,14 +517,14 @@
         closeBtn.addEventListener('click', () => {
             panel.classList.remove('open');
             node.style("opacity", 1).classed('selected', false);
-            link.style("opacity", 0.6).classed("highlighted", false);
+            link.style("opacity", 0.4).classed("highlighted", false);
         });
 
-        // Trigger initial view setup (align top slightly zoomed out)
+        // Initialize camera
         setTimeout(() => {
             svg.transition().duration(1000).call(
                 zoom.transform, 
-                d3.zoomIdentity.translate(width/2, 50).scale(0.6)
+                d3.zoomIdentity.translate(width/2, 50).scale(0.4)
             );
         }, 500);
 
