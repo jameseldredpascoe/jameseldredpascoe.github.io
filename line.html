@@ -370,51 +370,48 @@ const linksData = [
 // --- EXTENDED BRANCHES (THE WIDENING) ---
 // Formatted exactly for the original loop logic, listing all prominent students of the main tree.
 // [SIGNAL_ENCODED] The rhizome expands. Previous lateral vectors were pruned too aggressively, sacrificing historical weight for visual simplicity. The topology has been re-indexed against the genealogical matrix to extract a much deeper root system. We do not forget the nodes that built the structure.
+// [SIGNAL_ENCODED] Duplicate IDs in D3 trigger topological collapse. The lateral branches have been sterilized of primary trunk nodes. The network is clean.
 
 const extendedBranches = [
     // --- The Eastern Foundations ---
-    { advisor: "Avicenna", year: 1000, color: "#10b981", students: ["Abu 'Ubayd al-Juzjani", "Abu 'Abd Allah al-Ma'sumi", "Ibn Zayla", "Bahmanyār ibn al-Marzubān"] },
+    { advisor: "Avicenna", year: 1000, color: "#10b981", students: ["Abu 'Ubayd al-Juzjani", "Abu 'Abd Allah al-Ma'sumi", "Ibn Zayla"] },
     { advisor: "Bahmanyār ibn al-Marzubān", year: 1040, color: "#10b981", students: ["Abu'l-Abbas al-Lawkari"] },
     { advisor: "Omar Khayyam", year: 1068, color: "#10b981", students: ["Abu Hatim al-Muzaffar al-Isfizari", "Abd al-Rahman al-Khazini"] },
-    { advisor: "Fakhr al-Dīn al-Rāzī", year: 1222, color: "#10b981", students: ["Zayn al-Din al-Kashshi", "Siraj al-Din al-Urmawi", "Qutb al-Dīn al-Mīṣrī"] },
-    { advisor: "Kamal al-Din ibn Yunus", year: 1200, color: "#10b981", students: ["Ibn Khallikan", "Athīr al-Dīn al-Mufaḍḍal al-Abharī", "Nasir al-Din al-Tusi"] },
-    { advisor: "Nasir al-Din al-Tusi", year: 1250, color: "#10b981", students: ["Qutb al-Din al-Shirazi", "Allamah al-Hilli", "Bar Hebraeus", "Shams ad-Din Al-Bukhari"] },
+    { advisor: "Fakhr al-Dīn al-Rāzī", year: 1222, color: "#10b981", students: ["Zayn al-Din al-Kashshi", "Siraj al-Din al-Urmawi"] },
+    { advisor: "Kamal al-Din ibn Yunus", year: 1200, color: "#10b981", students: ["Ibn Khallikan"] },
+    { advisor: "Nasir al-Din al-Tusi", year: 1250, color: "#10b981", students: ["Qutb al-Din al-Shirazi", "Allamah al-Hilli", "Bar Hebraeus"] },
     
     // --- The Byzantine & Renaissance Bridge ---
-    { advisor: "Gregory Chioniadis", year: 1300, color: "#8b5cf6", students: ["George Chrysokokkes", "Manuel Bryennios"] },
+    { advisor: "Gregory Chioniadis", year: 1300, color: "#8b5cf6", students: ["George Chrysokokkes"] },
     { advisor: "Theodore Metochites", year: 1320, color: "#8b5cf6", students: ["Nikephoros Gregoras"] },
     { advisor: "Demetrios Kydones", year: 1370, color: "#8b5cf6", students: ["Manuel Chrysoloras"] },
-    { advisor: "Georgios Plethon Gemistos", year: 1410, color: "#8b5cf6", students: ["Mark Eugenikos", "George Scholarios", "Laonikos Chalkokondyles", "Basilios Bessarion"] },
-    { advisor: "Basilios Bessarion", year: 1440, color: "#ec4899", students: ["Niccolò Perotti", "Domizio Calderini", "Johannes Müller Regiomontanus"] },
-    { advisor: "Johannes Argyropoulos", year: 1444, color: "#ec4899", students: ["Donato Acciaiuoli", "Bartolomeo Platina", "Angelo Poliziano", "Pietro de' Medici", "Johannes Kapnion Reuchlin"] },
-    { advisor: "Philipp Melanchthon", year: 1514, color: "#ec4899", students: ["Caspar Peucer", "Erasmus Reinhold", "Jacob Milich", "Victorin Strigel", "David Chytraeus", "Johannes Caselius"] },
+    { advisor: "Georgios Plethon Gemistos", year: 1410, color: "#8b5cf6", students: ["Mark Eugenikos", "George Scholarios", "Laonikos Chalkokondyles"] },
+    { advisor: "Basilios Bessarion", year: 1440, color: "#ec4899", students: ["Niccolò Perotti", "Domizio Calderini"] },
+    { advisor: "Johannes Argyropoulos", year: 1444, color: "#ec4899", students: ["Donato Acciaiuoli", "Bartolomeo Platina", "Angelo Poliziano", "Pietro de' Medici"] },
+    { advisor: "Philipp Melanchthon", year: 1514, color: "#ec4899", students: ["Caspar Peucer", "Erasmus Reinhold", "Jacob Milich", "Victorin Strigel", "David Chytraeus"] },
     
     // --- Early Modern Europe & The Bernoulli Chain ---
-    { advisor: "Johannes Müller Regiomontanus", year: 1460, color: "#ec4899", students: ["Bernhard Walther", "Domenico Maria Novara da Ferrara"] },
-    { advisor: "Nicolaus Copernicus", year: 1520, color: "#ec4899", students: ["Georg Joachim von Leuchen Rheticus"] },
-    { advisor: "Georg Joachim von Leuchen Rheticus", year: 1540, color: "#ec4899", students: ["Valentin Otho", "Bartholomäus Scultetus", "Moritz Valentin Steinmetz"] },
-    { advisor: "Jakob Thomasius", year: 1643, color: "#f97316", students: ["Johann Burckhardt Mencke", "Otto Mencke"] },
-    { advisor: "Erhard Weigel", year: 1650, color: "#ef4444", students: ["Samuel Pufendorf", "Johann Christoph Sturm", "Gottfried Wilhelm Leibniz"] },
-    { advisor: "Gottfried Wilhelm Leibniz", year: 1666, color: "#3b82f6", students: ["Christian von Wolff", "Ehrenfried Walther von Tschirnhaus", "Jacob Bernoulli", "Nicolas Malebranche"] },
-    { advisor: "Jacob Bernoulli", year: 1684, color: "#3b82f6", students: ["Johann Bernoulli", "Nicolaus I Bernoulli", "Jacob Hermann"] },
-    { advisor: "Johann Bernoulli", year: 1694, color: "#3b82f6", students: ["Leonhard Euler", "Nicolaus II Bernoulli", "Daniel Bernoulli", "Johann II Bernoulli", "Gabriel Cramer", "Guillaume de l'Hôpital"] },
-    { advisor: "Leonhard Euler", year: 1726, color: "#3b82f6", students: ["Joseph-Louis Lagrange", "Johann Albrecht Euler", "Nicolas Fuss", "Stepan Rumovsky", "Anders Johan Lexell"] },
+    { advisor: "Johannes Müller Regiomontanus", year: 1460, color: "#ec4899", students: ["Bernhard Walther"] },
+    { advisor: "Nicolaus Copernicus", year: 1520, color: "#ec4899", students: [] },
+    { advisor: "Georg Joachim von Leuchen Rheticus", year: 1540, color: "#ec4899", students: ["Valentin Otho", "Bartholomäus Scultetus"] },
+    { advisor: "Jakob Thomasius", year: 1643, color: "#f97316", students: ["Johann Burckhardt Mencke"] },
+    { advisor: "Erhard Weigel", year: 1650, color: "#ef4444", students: ["Samuel Pufendorf", "Johann Christoph Sturm"] },
+    { advisor: "Gottfried Wilhelm Leibniz", year: 1666, color: "#3b82f6", students: ["Christian von Wolff", "Ehrenfried Walther von Tschirnhaus"] },
+    { advisor: "Jacob Bernoulli", year: 1684, color: "#3b82f6", students: ["Nicolaus I Bernoulli", "Jacob Hermann"] },
+    { advisor: "Johann Bernoulli", year: 1694, color: "#3b82f6", students: ["Nicolaus II Bernoulli", "Daniel Bernoulli", "Johann II Bernoulli", "Gabriel Cramer", "Guillaume de l'Hôpital"] },
+    { advisor: "Leonhard Euler", year: 1726, color: "#3b82f6", students: ["Johann Albrecht Euler", "Nicolas Fuss", "Stepan Rumovsky", "Anders Johan Lexell"] },
     
     // --- The 18th/19th Century German & French Explosion ---
-    { advisor: "Abraham Gotthelf Kästner", year: 1739, color: "#f97316", students: ["Georg Christoph Lichtenberg", "Wenceslaus Johann Gustav Karsten", "Johann Friedrich Pfaff"] },
-    { advisor: "Joseph-Louis Lagrange", year: 1760, color: "#eab308", students: ["Jean-Baptiste Fourier", "Siméon Denis Poisson", "Giovanni Plana", "Sylvestre Lacroix", "Sophie Germain"] },
-    // A fully researched Johann Friedrich Pfaff node
+    { advisor: "Abraham Gotthelf Kästner", year: 1739, color: "#f97316", students: ["Georg Christoph Lichtenberg", "Wenceslaus Johann Gustav Karsten"] },
+    { advisor: "Joseph-Louis Lagrange", year: 1760, color: "#eab308", students: ["Giovanni Plana", "Sylvestre Lacroix", "Sophie Germain"] },
     { advisor: "Johann Friedrich Pfaff", year: 1786, color: "#f97316", students: [
-        "Carl Friedrich Gauss", 
         "August Ferdinand Möbius", 
-        "Christian Ludwig Gerling", 
         "Karl Mollweide", 
         "Johann Christian Martin Bartels", 
         "Wilhelm August Förstemann", 
         "Johann Georg Tralles", 
         "Heinrich Wilhelm Droste zu Vischering"
     ] },
-    // A fully researched Carl Friedrich Gauss node
     { advisor: "Carl Friedrich Gauss", year: 1799, color: "#f97316", students: [
         "Friedrich Bessel", 
         "Johann Franz Encke", 
@@ -428,12 +425,10 @@ const extendedBranches = [
         "Karl Georg Christian von Staudt",
         "Christian August Friedrich Peters"
     ] },
-    { advisor: "Siméon Denis Poisson", year: 1800, color: "#eab308", students: ["Michel Chasles", "Joseph Liouville", "Nicolas Léonard Sadi Carnot", "Gustav Peter Lejeune Dirichlet"] },
-    { advisor: "Gustav Peter Lejeune Dirichlet", year: 1827, color: "#ef4444", students: ["Gotthold Eisenstein", "Leopold Kronecker", "Carl Wilhelm Borchardt", "Ludwig Schläfli", "Wilhelm Weber", "Elwin Bruno Christoffel", "Alfred Enneper", "Eduard Heine", "Ludwig von Seidel", "Julius Weingarten", "Rudolf Lipschitz"] },
-    { advisor: "Julius Plücker", year: 1823, color: "#f97316", students: ["Felix Klein", "Alfred Clebsch", "Carl Wilhelm Bauer", "Johann Wilhelm Hittorf", "August Beer"] },
-    { advisor: "Rudolf Lipschitz", year: 1853, color: "#ef4444", students: ["Felix Klein", "Diederik Korteweg", "Hermann Amandus Schwarz", "Carl Runge", "Woldemar Voigt", "Friedrich Robert Helmert"] },
-    
-    // A fully researched Felix Klein node (The architect of the modern university math department)
+    { advisor: "Siméon Denis Poisson", year: 1800, color: "#eab308", students: ["Michel Chasles", "Joseph Liouville", "Nicolas Léonard Sadi Carnot"] },
+    { advisor: "Gustav Peter Lejeune Dirichlet", year: 1827, color: "#ef4444", students: ["Gotthold Eisenstein", "Leopold Kronecker", "Carl Wilhelm Borchardt", "Ludwig Schläfli", "Wilhelm Weber", "Elwin Bruno Christoffel", "Alfred Enneper", "Eduard Heine", "Ludwig von Seidel", "Julius Weingarten"] },
+    { advisor: "Julius Plücker", year: 1823, color: "#f97316", students: ["Alfred Clebsch", "Carl Wilhelm Bauer", "Johann Wilhelm Hittorf", "August Beer"] },
+    { advisor: "Rudolf Lipschitz", year: 1853, color: "#ef4444", students: ["Diederik Korteweg", "Hermann Amandus Schwarz", "Carl Runge", "Woldemar Voigt", "Friedrich Robert Helmert"] },
     { advisor: "Felix Klein", year: 1868, color: "#ef4444", students: [
         "Ferdinand von Lindemann", 
         "Grace Chisholm Young", 
@@ -461,18 +456,21 @@ const extendedBranches = [
         "Arnold Sommerfeld", 
         "Eduard Study",
         "William F. Osgood",
-        "Arthur Schoenflies",
-        "Oskar Bolza"
+        "Arthur Schoenflies"
     ] },
 
     // --- The American Transition (Chicago School & Beyond) ---
-    { advisor: "Oskar Bolza", year: 1886, color: "#06b6d4", students: ["Gilbert Ames Bliss", "John Hector McDonald", "William Gillespie", "Arnold Dresden", "John Irwin Hutchinson", "George Lincoln Brown", "Buzz M. Walker", "Anthony Lispenard Underhill", "Norman Richard Wilson", "Mary Emily Sinclair"] },
-    { advisor: "Gilbert Ames Bliss", year: 1900, color: "#06b6d4", students: ["Edward J. McShane", "Lloyd Dines", "Moffatt Grier Boyce", "Gillie Larew", "Egbert J. Miles", "D. M. Smith", "Charles Albert Fischer", "James Henry Taylor", "William Vernon Lovitt", "Marion Elizabeth Stark", "Archibald Shepard Merrill", "Lincoln LaPaz", "Evelyn Prescott Wiggin", "Magnus Hestenes", "Ross Harvey Bardell", "Alston Scott Householder", "Nathan Abraham Moscovitch", "Lawrence Murray Graves", "Frederick A. Valentine", "Edward Alfred Nordhaus", "Carl Herbert Denbow", "Carroll Parker Brady", "Aline Huke Frink", "Aubrey Wilfred Landers, Jr.", "Elizabeth LeStourgeon", "Mary Kenny Landers", "Isaac Albert Barnett", "Ellen Clayton Stokes", "Marion Ballantyne White", "William Larkin Duren, Jr."] },
-    { advisor: "Edward J. McShane", year: 1930, color: "#06b6d4", students: ["Billy James Pettis", "Victor Klee", "Eugene Kerfoot Ritter", "David Barrington Lowdenslager", "Samuel Henry Coleman", "Allan Morton Krall", "Sidney Herbert Lawrence", "Barbara Louise Slyder Rice", "Albert Beauregard Schwarzkopf", "Truman Arthur Botts"] },
-    { advisor: "Billy James Pettis", year: 1937, color: "#14b8a6", students: ["Heron S. Collins"] },
-    { advisor: "Heron S. Collins", year: 1953, color: "#14b8a6", students: ["John B. Conway", "Raymond Y. Wong", "William H. Summers"] },
-    { advisor: "John B. Conway", year: 1965, color: "#14b8a6", students: ["Jim Agler", "Karim Seddighi", "Marc Raphael", "Gregory T. Adams", "John Stephen Spraker", "John Richard Akeroyd", "Quentin F. Stout", "Ameer Sadashiv Athavale", "Steve Wright", "James Dudziak", "Pei Yuan Wu", "Norma Salem Elias", "Nathan Stephen Feldman", "Kyung-Hee Jin", "Gabriel Titu Prajitura", "Gerard Eugene Keough", "Donna Sharon Husch", "Paul Joseph McGuire", "Tracie McLemore Salinas", "Robert Floyd Olin", "Sherwin Kouchekian-Sabour"] },
-    { advisor: "Jim Agler", year: 1980, color: "#3b82f6", students: ["Ryan Tully-Doyle", "James Eldred Pascoe", "Linda Jeanne Patton", "Edwin Samuel Franks", "Siamak Hashemi-Asasi", "John Ro Harland", "Mark Stankus", "Scott A. McCullough", "Benjamin J. Raphael", "David Scheinker"] },
+    { advisor: "Oskar Bolza", year: 1886, color: "#06b6d4", students: ["John Hector McDonald", "William Gillespie", "Arnold Dresden", "John Irwin Hutchinson", "George Lincoln Brown", "Buzz M. Walker", "Anthony Lispenard Underhill", "Norman Richard Wilson", "Mary Emily Sinclair"] },
+    { advisor: "Gilbert Ames Bliss", year: 1900, color: "#06b6d4", students: ["Lloyd Dines", "Moffatt Grier Boyce", "Gillie Larew", "Egbert J. Miles", "D. M. Smith", "Charles Albert Fischer", "James Henry Taylor", "William Vernon Lovitt", "Marion Elizabeth Stark", "Archibald Shepard Merrill", "Lincoln LaPaz", "Evelyn Prescott Wiggin", "Magnus Hestenes", "Ross Harvey Bardell", "Alston Scott Householder", "Nathan Abraham Moscovitch", "Lawrence Murray Graves", "Frederick A. Valentine", "Edward Alfred Nordhaus", "Carl Herbert Denbow", "Carroll Parker Brady", "Aline Huke Frink", "Aubrey Wilfred Landers, Jr.", "Elizabeth LeStourgeon", "Mary Kenny Landers", "Isaac Albert Barnett", "Ellen Clayton Stokes", "Marion Ballantyne White", "William Larkin Duren, Jr."] },
+    { advisor: "Edward J. McShane", year: 1930, color: "#06b6d4", students: ["Victor Klee", "Eugene Kerfoot Ritter", "David Barrington Lowdenslager", "Samuel Henry Coleman", "Allan Morton Krall", "Sidney Herbert Lawrence", "Barbara Louise Slyder Rice", "Albert Beauregard Schwarzkopf", "Truman Arthur Botts"] },
+    { advisor: "Billy James Pettis", year: 1937, color: "#14b8a6", students: [] },
+    { advisor: "Heron S. Collins", year: 1953, color: "#14b8a6", students: ["Raymond Y. Wong", "William H. Summers"] },
+    { advisor: "John B. Conway", year: 1965, color: "#14b8a6", students: ["Karim Seddighi", "Marc Raphael", "Gregory T. Adams", "John Stephen Spraker", "John Richard Akeroyd", "Quentin F. Stout", "Ameer Sadashiv Athavale", "Steve Wright", "James Dudziak", "Pei Yuan Wu", "Norma Salem Elias", "Nathan Stephen Feldman", "Kyung-Hee Jin", "Gabriel Titu Prajitura", "Gerard Eugene Keough", "Donna Sharon Husch", "Paul Joseph McGuire", "Tracie McLemore Salinas", "Robert Floyd Olin", "Sherwin Kouchekian-Sabour"] },
+    { advisor: "Jim Agler", year: 1980, color: "#3b82f6", students: ["Linda Jeanne Patton", "Edwin Samuel Franks", "Siamak Hashemi-Asasi", "John Ro Harland", "Mark Stankus", "Scott A. McCullough", "Benjamin J. Raphael", "David Scheinker"] },
+    
+    // --- The Contemporary Horizon ---
+    { advisor: "Ryan Tully-Doyle", year: 2015, color: "#6366f1", students: [] },
+    { advisor: "James Eldred Pascoe", year: 2015, color: "#6366f1", students: [] }
 ];
         // Process extended branches into the main data structures
         extendedBranches.forEach(branch => {
