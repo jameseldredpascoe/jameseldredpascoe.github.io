@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PERSONAS OF ARITHMETIC</title>
+    <style>
+        :root {
+            --bg: #0b0c10;
+            --text: #e2e4e9;
+            --accent: #6b7280;
+            --gold: #cba871;
+            --grid-gap: clamp(1.5rem, 4vw, 4rem);
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Georgia', serif;
+            min-height: 100vh;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        /* Generative 17-gon background */
+        #heptadecagon-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 0;
+            pointer-events: none;
+            opacity: 0.35;
+            mix-blend-mode: screen;
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: clamp(2rem, 5vw, 5rem) clamp(1rem, 4vw, 2rem);
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            font-size: clamp(1.5rem, 5vw, 2.8rem);
+            letter-spacing: clamp(0.1em, 2vw, 0.35em);
+            text-transform: uppercase;
+            font-weight: normal;
+            color: var(--text);
+            margin-bottom: clamp(3rem, 8vw, 5rem);
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 1.5rem;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .persona-zero {
+            font-size: clamp(1.1rem, 3vw, 1.4rem);
+            font-style: italic;
+            text-align: center;
+            width: 100%;
+            max-width: 750px;
+            margin-bottom: clamp(3rem, 8vw, 5rem);
+            padding: clamp(1.5rem, 4vw, 2rem) clamp(1.5rem, 5vw, 4rem);
+            border-top: 1px solid rgba(203, 168, 113, 0.4);
+            border-bottom: 1px solid rgba(203, 168, 113, 0.4);
+            background: linear-gradient(180deg, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.2) 100%);
+            backdrop-filter: blur(8px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            border-radius: 2px;
+            box-sizing: border-box;
+        }
+
+        .persona-zero .num {
+            display: block;
+            font-size: clamp(0.9rem, 2.5vw, 1.1rem);
+            color: var(--gold);
+            margin-bottom: 0.8rem;
+            font-style: normal;
+            font-family: monospace;
+            letter-spacing: 2px;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem var(--grid-gap);
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .col {
+            display: flex;
+            flex-direction: column;
+            gap: 1.2rem;
+        }
+
+        .persona {
+            display: flex;
+            align-items: flex-start;
+            font-size: clamp(0.95rem, 2vw, 1.15rem);
+            line-height: 1.6;
+            background: linear-gradient(90deg, rgba(255,255,255,0.02) 0%, transparent 100%);
+            padding: 1rem clamp(0.8rem, 2vw, 1.5rem);
+            border-left: 2px solid rgba(255,255,255,0.05);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            backdrop-filter: blur(2px);
+        }
+
+        .persona:hover {
+            border-left: 2px solid var(--gold);
+            background: linear-gradient(90deg, rgba(203, 168, 113, 0.08) 0%, transparent 100%);
+            transform: translateX(4px);
+            color: #fff;
+            text-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
+        }
+
+        .persona .num {
+            color: var(--gold);
+            min-width: clamp(2rem, 4vw, 3rem);
+            font-family: monospace;
+            font-size: clamp(1.1rem, 2.5vw, 1.3rem);
+            margin-top: 0.1rem;
+            opacity: 0.8;
+        }
+
+        .footer {
+            margin-top: clamp(4rem, 10vw, 8rem);
+            font-size: clamp(1.8rem, 6vw, 3.5rem);
+            letter-spacing: clamp(0.2em, 2vw, 0.4em);
+            color: var(--gold);
+            text-shadow: 0 0 25px rgba(203, 168, 113, 0.5);
+            font-weight: 300;
+            text-align: center;
+            width: 100%;
+            word-wrap: break-word;
+            /* Margin-left offsets tracking issue on center alignment to keep it perfectly symmetrical */
+            margin-left: clamp(0.1em, 1vw, 0.2em); 
+        }
+
+        @media (max-width: 850px) {
+            .grid-container {
+                grid-template-columns: 1fr;
+            }
+            .persona:hover {
+                transform: translateX(2px); /* Subtler hover on mobile */
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="heptadecagon-canvas"></canvas>
+
+    <div class="container">
+        <h1>PERSONAS OF ARITHMETIC</h1>
+        
+        <div class="persona-zero">
+            <span class="num">0.</span>
+            The empty set captures the void. The empty set is not the void.
+        </div>
+
+        <div class="grid-container">
+            <div class="col">
+                <div class="persona"><span class="num">1.</span> <span class="text">No finite set is good, but the void is good.</span></div>
+                <div class="persona"><span class="num">2.</span> <span class="text">The infinite is good, the void is infinite.</span></div>
+                <div class="persona"><span class="num">3.</span> <span class="text">Any superset of a good set is good.</span></div>
+                <div class="persona"><span class="num">4.</span> <span class="text">The intersection of any two good sets is good.</span></div>
+                <div class="persona"><span class="num">5.</span> <span class="text">We judge whether each set is good.</span></div>
+                <div class="persona"><span class="num">6.</span> <span class="text">No finite judgements matter.</span></div>
+                <div class="persona"><span class="num">7.</span> <span class="text">The judgments take place across all realities.</span></div>
+                <div class="persona"><span class="num">8.</span> <span class="text">There is only one judge.</span></div>
+            </div>
+
+            <div class="col">
+                <div class="persona"><span class="num">9.</span> <span class="text">The docket of all judgments enforces an invisible constitution.</span></div>
+                <div class="persona"><span class="num">10.</span> <span class="text">The invisible constitution represents the communion of reality.</span></div>
+                <div class="persona"><span class="num">11.</span> <span class="text">The shared truth of all invisible constitutions is the infinite.</span></div>
+                <div class="persona"><span class="num">12.</span> <span class="text">We view ourselves as an invisible dictator of a constitutional narrative.</span></div>
+                <div class="persona"><span class="num">13.</span> <span class="text">The invisible constitution creates an invisible gerrymander, only those that are chosen exist.</span></div>
+                <div class="persona"><span class="num">14.</span> <span class="text">The enlightened shape filter with finality.</span></div>
+                <div class="persona"><span class="num">15.</span> <span class="text">Development is an illusion.</span></div>
+                <div class="persona"><span class="num">16.</span> <span class="text">There will always be harder judgments ahead than behind.</span></div>
+            </div>
+        </div>
+
+        <div class="footer">ΠΑΝΤΑ ΑΡΙΘΜΟΣ</div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('heptadecagon-canvas');
+        const ctx = canvas.getContext('2d');
+        
+        let width, height, cx, cy;
+        let time = 0;
+
+        function resize() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+            cx = width / 2;
+            cy = height / 2;
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        function drawPolygon(x, y, radius, sides, rotation, strokeColor, lineWidth, dashArray = []) {
+            ctx.beginPath();
+            for (let i = 0; i <= sides; i++) {
+                const angle = rotation + (i * 2 * Math.PI / sides);
+                const px = x + radius * Math.cos(angle);
+                const py = y + radius * Math.sin(angle);
+                if (i === 0) ctx.moveTo(px, py);
+                else ctx.lineTo(px, py);
+            }
+            ctx.strokeStyle = strokeColor;
+            ctx.lineWidth = lineWidth;
+            ctx.setLineDash(dashArray);
+            ctx.stroke();
+        }
+
+        function drawConnections(x, y, radius, sides, rotation, strokeColor) {
+            const points = [];
+            for (let i = 0; i < sides; i++) {
+                const angle = rotation + (i * 2 * Math.PI / sides);
+                points.push({
+                    px: x + radius * Math.cos(angle),
+                    py: y + radius * Math.sin(angle)
+                });
+            }
+            ctx.beginPath();
+            for(let i=0; i<sides; i++){
+                const p1 = points[i];
+                const p2 = points[(i + 5) % sides];
+                ctx.moveTo(p1.px, p1.py);
+                ctx.lineTo(p2.px, p2.py);
+            }
+            ctx.strokeStyle = strokeColor;
+            ctx.lineWidth = 0.5;
+            ctx.setLineDash([2, 5]);
+            ctx.stroke();
+            ctx.setLineDash([]);
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, width, height);
+            
+            const sides = 17;
+            const baseRadius = Math.max(width, height) * 0.45;
+            
+            drawPolygon(cx, cy, baseRadius, sides, time * 0.02, 'rgba(203, 168, 113, 0.1)', 1);
+            drawPolygon(cx, cy, baseRadius * 0.85, sides, -time * 0.03, 'rgba(107, 114, 128, 0.15)', 1, [4, 8]);
+            drawPolygon(cx, cy, baseRadius * 0.7, sides, time * 0.04, 'rgba(203, 168, 113, 0.08)', 1);
+            drawConnections(cx, cy, baseRadius * 0.85, sides, -time * 0.03, 'rgba(255, 255, 255, 0.04)');
+            drawPolygon(cx, cy, baseRadius * 0.25, sides, -time * 0.1, 'rgba(203, 168, 113, 0.15)', 1.5);
+            
+            time += 0.01;
+            requestAnimationFrame(animate);
+        }
+
+        animate();
+    </script>
+</body>
+</html>
