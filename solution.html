@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="X-AI-Policy" content="restricted-assessment">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Matrix Analysis — Midterm 2 Review Solutions</title>
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+      }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <style>
+    :root {
+      --bg: #fdfdfd;
+      --fg: #1c1e21;
+      --muted: #5a626a;
+      --border: #dfe3e8;
+      --accent: #1d4ed8;
+      --card-bg: #ffffff;
+    }
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      padding: 2.5rem 1.25rem 4rem;
+      background: var(--bg);
+      color: var(--fg);
+      font-family: "Georgia", "Cambria", "Times New Roman", serif;
+      line-height: 1.68;
+      font-size: 16.5px;
+    }
+    main {
+      max-width: 820px;
+      margin: 0 auto;
+    }
+    header {
+      border-bottom: 2px solid var(--fg);
+      padding-bottom: 1rem;
+      margin-bottom: 2.25rem;
+    }
+    h1 {
+      margin: 0 0 0.35rem;
+      font-size: 1.9rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+    }
+    .subtitle {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.95rem;
+      font-style: italic;
+    }
+    article.problem {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 1.4rem 1.6rem;
+      margin-bottom: 1.6rem;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+    }
+    article.problem h2 {
+      margin: 0 0 0.65rem;
+      font-size: 1.15rem;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      color: var(--accent);
+      letter-spacing: 0.01em;
+    }
+    .prompt {
+      margin: 0 0 1rem;
+      padding-left: 0.9rem;
+      border-left: 3px solid var(--border);
+      color: var(--muted);
+      font-size: 0.96rem;
+    }
+    .solution p {
+      margin: 0.65rem 0;
+    }
+    .qed {
+      float: right;
+      font-style: normal;
+      color: var(--fg);
+    }
+    .clearfix::after {
+      content: "";
+      display: table;
+      clear: both;
+    }
+    footer {
+      margin-top: 2.5rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 0.85rem;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <h1>Matrix Analysis — Midterm 2 Review Solutions</h1>
+      <p class="subtitle">Reference solutions. All matrices have complex entries unless stated otherwise; unsubscripted norms denote the Euclidean operator norm.</p>
+    </header>
+
+    <article class="problem">
+      <h2>Problem 1</h2>
+      <p class="prompt">Define a matrix norm.</p>
+      <div class="solution clearfix">
+        <p>A function $\|\cdot\| : M_n(\mathbb{C}) \to [0, \infty)$ is a <strong>matrix norm</strong> if and only if it is the Minkowski gauge functional
+        $$\|A\| = p_K(A) := \inf\{\lambda > 0 : A \in \lambda K\}$$
+        of a subset $K \subset M_n(\mathbb{C})$ (the closed unit ball) satisfying the following five geometric-algebraic axioms:</p>
+        <ol>
+          <li><strong>Compactness:</strong> $K$ is closed and bounded in the standard Euclidean topology on $M_n(\mathbb{C}) \cong \mathbb{C}^{n^2}$.</li>
+          <li><strong>Convexity:</strong> $t K + (1-t)K \subseteq K$ for all $t \in [0, 1]$.</li>
+          <li><strong>Circledness (balance):</strong> $e^{i\theta} K = K$ for all $\theta \in \mathbb{R}$.</li>
+          <li><strong>Absorption:</strong> $0$ lies in the topological interior of $K$ (equivalently, $\bigcup_{\lambda > 0} \lambda K = M_n(\mathbb{C})$).</li>
+          <li><strong>Multiplicative semigroup property:</strong> $K \cdot K \subseteq K$, i.e., $AB \in K$ whenever $A, B \in K$.</li>
+        </ol>
+        <p>Under this characterization, absorption and compactness yield positive definiteness, circledness gives absolute homogeneity, convexity gives the triangle inequality, and the semigroup property $K \cdot K \subseteq K$ is equivalent to submultiplicativity $\|AB\| \le \|A\|\|B\|$.<span class="qed">$\blacksquare$</span></p>
+      </div>
+    </article>
+
+    <article class="problem">
+      <h2>Problem 2</h2>
+      <p class="prompt">State and prove the singular value decomposition.</p>
+      <div class="solution clearfix">
+        <p><strong>Statement.</strong> For any $A \in M_{m,n}(\mathbb{C})$, there exist unitary matrices $U \in M_m(\mathbb{C})$ and $V \in M_n(\mathbb{C})$ and a diagonal matrix $\Sigma \in M_{m,n}(\mathbb{R})$ with nonnegative diagonal entries $\sigma_1 \ge \sigma_2 \ge \dots \ge \sigma_{\min(m,n)} \ge 0$ such that $A = U \Sigma V^*$.</p>
+        <p><strong>Proof (via the Jordan–Wielandt Hermitian dilation).</strong> Form the $(m+n) \times (m+n)$ Hermitian matrix
+        $$H = \begin{pmatrix} 0 & A \\ A^* & 0 \end{pmatrix} \in M_{m+n}(\mathbb{C}), \qquad J = \begin{pmatrix} I_m & 0 \\ 0 & -I_n \end{pmatrix}.$$
+        Notice that $J$ is unitary and satisfies $J H J^* = -H$. Consequently, if $H \begin{pmatrix} x \\ y \end{pmatrix} = \sigma \begin{pmatrix} x \\ y \end{pmatrix}$ for a nonzero eigenvalue $\sigma > 0$ (where $x \in \mathbb{C}^m, y \in \mathbb{C}^n$), then $J \begin{pmatrix} x \\ y \end{pmatrix} = \begin{pmatrix} x \\ -y \end{pmatrix}$ is an eigenvector of $H$ with eigenvalue $-\sigma$.</p>
+        <p>Since eigenvectors of a Hermitian matrix corresponding to distinct eigenvalues are orthogonal, $\begin{pmatrix} x \\ y \end{pmatrix} \perp \begin{pmatrix} x \\ -y \end{pmatrix}$, which gives $\|x\|_2^2 - \|y\|_2^2 = 0$, so $\|x\|_2 = \|y\|_2$. Let $\sigma_1 \ge \dots \ge \sigma_r > 0$ be the strictly positive eigenvalues of $H$ counted with multiplicity, and choose an orthonormal system of corresponding eigenvectors $\frac{1}{\sqrt{2}} \begin{pmatrix} u_i \\ v_i \end{pmatrix}$ for $1 \le i \le r$. By the scaling above, $\|u_i\|_2 = \|v_i\|_2 = 1$, and for $i \neq j$ the orthogonality of $\begin{pmatrix} u_i \\ v_i \end{pmatrix}$ to both $\begin{pmatrix} u_j \\ v_j \end{pmatrix}$ and $\begin{pmatrix} u_j \\ -v_j \end{pmatrix}$ yields
+        $$\langle u_i, u_j \rangle + \langle v_i, v_j \rangle = 0 \quad \text{and} \quad \langle u_i, u_j \rangle - \langle v_i, v_j \rangle = 0,$$
+        so $\{u_1, \dots, u_r\}$ and $\{v_1, \dots, v_r\}$ are each orthonormal sets.</p>
+        <p>The kernel of $H$ splits directly as $\ker(H) = (\ker(A^*) \oplus \{0\}) \oplus (\{0\} \oplus \ker(A))$. Pick an orthonormal basis $\{u_{r+1}, \dots, u_m\}$ of $\ker(A^*)$ and an orthonormal basis $\{v_{r+1}, \dots, v_n\}$ of $\ker(A)$. By the spectral theorem applied to $H$, these complete $\{u_1, \dots, u_r\}$ and $\{v_1, \dots, v_r\}$ to orthonormal bases of $\mathbb{C}^m$ and $\mathbb{C}^n$. Assemble the unitary matrices $U = [u_1 \cdots u_m]$ and $V = [v_1 \cdots v_n]$, and let $\Sigma \in M_{m,n}(\mathbb{R})$ have $\Sigma_{ii} = \sigma_i$ for $1 \le i \le r$ and $0$ elsewhere. Reading the top block of $H \begin{pmatrix} u_i \\ v_i \end{pmatrix} = \sigma_i \begin{pmatrix} u_i \\ v_i \end{pmatrix}$ gives $A v_i = \sigma_i u_i$ for $i \le r$, and $A v_i = 0$ for $i > r$. Hence $AV = U\Sigma$, so $A = U\Sigma V^*$.<span class="qed">$\blacksquare$</span></p>
+      </div>
+    </article>
+
+    <article class="problem">
+      <h2>Problem 3</h2>
+      <p class="prompt">State and prove the polar decomposition.</p>
+      <div class="solution clearfix">
+        <p><strong>Statement.</strong> For every $A \in M_n(\mathbb{C})$, there exist a unitary matrix $W \in M_n(\mathbb{C})$ and a Hermitian positive semidefinite matrix $P \in M_n(\mathbb{C})$ such that $A = W P$. Moreover, $P = (A^* A)^{1/2}$ is unique, and $W$ is unique if $A$ is invertible.</p>
+        <p><strong>Proof (via variational maximization over the unitary group).</strong> Consider the continuous real-valued functional $\Phi : U(n) \to \mathbb{R}$ defined on the unitary group $U(n)$ by
+        $$\Phi(W) = \operatorname{Re}\operatorname{tr}(W^* A).$$
+        Since $U(n)$ is closed and bounded in $M_n(\mathbb{C})$, it is compact, so $\Phi$ attains a global maximum at some $W_0 \in U(n)$. Set $P = W_0^* A$, so that $A = W_0 P$.</p>
+        <p>First, we show that $P$ is Hermitian. For any skew-Hermitian matrix $K = -K^* \in M_n(\mathbb{C})$, the curve $t \mapsto W_0 e^{tK}$ lies in $U(n)$ for all $t \in \mathbb{R}$. Since $t = 0$ maximizes $g(t) = \Phi(W_0 e^{tK}) = \operatorname{Re}\operatorname{tr}(e^{-tK} P)$, we have
+        $$0 = g'(0) = -\operatorname{Re}\operatorname{tr}(K P).$$
+        Taking $K = P - P^*$ (which is skew-Hermitian) gives $0 = \operatorname{Re}\operatorname{tr}((P - P^*)P) = \frac{1}{2}\operatorname{tr}((P - P^*)(P - P^*)) = -\frac{1}{2}\|P - P^*\|_F^2$, whence $P = P^*$.</p>
+        <p>Next, we show that $P$ is positive semidefinite. By the spectral theorem, write $P = Q \operatorname{diag}(\lambda_1, \dots, \lambda_n) Q^*$ with $Q \in U(n)$ and $\lambda_j \in \mathbb{R}$. For any fixed $k \in \{1, \dots, n\}$, let $D_k = Q \operatorname{diag}(1, \dots, -1, \dots, 1) Q^* \in U(n)$ (with $-1$ in the $k$-th diagonal slot). Because $W_0 D_k \in U(n)$, maximality of $W_0$ yields
+        $$\operatorname{tr}(P) = \Phi(W_0) \ge \Phi(W_0 D_k) = \operatorname{tr}(D_k^* P) = \operatorname{tr}(P) - 2\lambda_k,$$
+        which implies $\lambda_k \ge 0$ for every $k$. Thus $P \ge 0$ and $A = W_0 P$.</p>
+        <p>For uniqueness, $A^* A = P^* W_0^* W_0 P = P^2$, so $P$ must be the unique positive semidefinite square root $(A^* A)^{1/2}$. If $A$ is invertible, then $P$ is invertible and $W_0 = A P^{-1}$ is uniquely determined.<span class="qed">$\blacksquare$</span></p>
+      </div>
+    </article>
+
+    <article class="problem">
+      <h2>Problem 4</h2>
+      <p class="prompt">State and prove Cauchy's eigenvalue interlacing theorem for a Hermitian matrix and a principal submatrix obtained by deleting one row and the corresponding column.</p>
+      <div class="solution clearfix">
+        <p><strong>Statement.</strong> Let $A \in M_n(\mathbb{C})$ be Hermitian with eigenvalues $\lambda_1 \ge \lambda_2 \ge \dots \ge \lambda_n$, and let $B \in M_{n-1}(\mathbb{C})$ be obtained from $A$ by deleting one row and the corresponding column, with eigenvalues $\mu_1 \ge \mu_2 \ge \dots \ge \mu_{n-1}$. Then
+        $$\lambda_1 \ge \mu_1 \ge \lambda_2 \ge \mu_2 \ge \dots \ge \mu_{n-1} \ge \lambda_n.$$
+        </p>
+        <p><strong>Proof (via the Schur complement and Pick–Herglotz monotonicity).</strong> Conjugating $A$ by a permutation matrix preserves eigenvalues, so we may assume $A = \begin{pmatrix} B & v \\ v^* & \alpha \end{pmatrix}$ with $v \in \mathbb{C}^{n-1}$ and $\alpha \in \mathbb{R}$. Diagonalize $B = Q \operatorname{diag}(\mu_1, \dots, \mu_{n-1}) Q^*$ with $Q$ unitary, and conjugate $A$ by $Q \oplus 1$ to replace $B$ by $\operatorname{diag}(\mu_1, \dots, \mu_{n-1})$ and $v$ by $w = Q^* v$.</p>
+        <p>By the Schur complement determinant identity, for all $z \in \mathbb{C} \setminus \{\mu_1, \dots, \mu_{n-1}\}$,
+        $$R(z) := \frac{\det(zI_n - A)}{\det(zI_{n-1} - B)} = z - \alpha - w^*(zI_{n-1} - \operatorname{diag}(\mu_j))^{-1} w = z - \alpha - \sum_{j=1}^{n-1} \frac{|w_j|^2}{z - \mu_j}.$$
+        Group repeated eigenvalues of $B$ into distinct values $\nu_1 > \nu_2 > \dots > \nu_m$ with multiplicities $d_1, \dots, d_m$ ($\sum d_k = n-1$), and set $c_k = \sum_{\mu_j = \nu_k} |w_j|^2 \ge 0$. Then
+        $$R(z) = z - \alpha - \sum_{k=1}^{m} \frac{c_k}{z - \nu_k}, \qquad \det(zI_n - A) = R(z)\prod_{k=1}^{m}(z - \nu_k)^{d_k}.$$
+        </p>
+        <p>First, suppose $c_k > 0$ for all $k$. Then $R(z)$ has simple poles at $\nu_1 > \dots > \nu_m$, and on every interval in $\mathbb{R} \setminus \{\nu_1, \dots, \nu_m\}$,
+        $$R'(z) = 1 + \sum_{k=1}^{m} \frac{c_k}{(z - \nu_k)^2} > 0.$$
+        Thus $R$ is strictly increasing on each of the $m+1$ open intervals $(-\infty, \nu_m), (\nu_m, \nu_{m-1}), \dots, (\nu_2, \nu_1), (\nu_1, \infty)$, sweeping from $-\infty$ to $+\infty$ on every one of them. By the Intermediate Value Theorem, $R$ has exactly one simple root in each of these $m+1$ intervals, strictly interlacing $\nu_1, \dots, \nu_m$. Meanwhile, each factor $(z - \nu_k)^{d_k - 1}$ contributes $\nu_k$ as a root of $\det(zI_n - A)$ with multiplicity $d_k - 1$. Accounting for all $m + 1 + \sum (d_k - 1) = n$ roots gives $\lambda_1 \ge \mu_1 \ge \dots \ge \mu_{n-1} \ge \lambda_n$.</p>
+        <p>If some $c_k = 0$, perturb $w$ by $\varepsilon \to 0^+$ so all $c_k(\varepsilon) > 0$; by continuity of the eigenvalues of a Hermitian matrix (e.g., Weyl's inequality or continuity of roots of monic polynomials), the non-strict interlacing inequalities persist in the limit $\varepsilon \to 0^+$.<span class="qed">$\blacksquare$</span></p>
+      </div>
+    </article>
+
+    <article class="problem">
+      <h2>Problem 5</h2>
+      <p class="prompt">Given $A \in M_n(\mathbb{C})$, determine whether there exist $N > n$ and a block matrix $\tilde{A} = \begin{pmatrix} A & B \\ 0 & C \end{pmatrix} \in M_N(\mathbb{C})$ with at most two distinct singular values and $\|\tilde{A}\| = \|A\|$. When $A$ is invertible, require also that $\tilde{A}$ be invertible and $\|\tilde{A}^{-1}\| = \|A^{-1}\|$. Prove your answer.</p>
+      <div class="solution clearfix">
+        <p><strong>Answer.</strong> Yes; $N = 2n$ always suffices.</p>
+        <p><strong>Proof (via explicit Givens rotations).</strong> Let $S = \|A\| = \sigma_{\max}(A)$.</p>
+        <p><em>Case 1: $A$ is singular.</em> Since $S^2 I_n - A A^* \ge 0$, set $B = (S^2 I_n - A A^*)^{1/2} \in M_n(\mathbb{C})$ and $C = 0 \in M_n(\mathbb{C})$. Then $\tilde{A} = \begin{pmatrix} A & B \\ 0 & 0 \end{pmatrix} \in M_{2n}(\mathbb{C})$ satisfies $\tilde{A}\tilde{A}^* = S^2 I_n \oplus 0_n$, whose eigenvalues are $S^2$ and $0$. Hence $\tilde{A}$ has singular values $S$ and $0$ (at most two distinct values) and $\|\tilde{A}\| = S = \|A\|$.</p>
+        <p><em>Case 2: $A$ is invertible.</em> Let $s = \|A^{-1}\|^{-1} = \sigma_{\min}(A) > 0$, and take an SVD $A = U \Sigma V^*$ with $\Sigma = \operatorname{diag}(\sigma_1, \dots, \sigma_n)$ and $s \le \sigma_i \le S$. If $S = s$, simply take $B = 0$ and $C = S I_n$, giving a single singular value $S$.</p>
+        <p>Suppose $S > s$. For each $i \in \{1, \dots, n\}$, define angles $\psi_i, \phi_i \in [0, \pi/2]$ by
+        $$\cos\psi_i = \sqrt{\frac{\sigma_i^2 - s^2}{S^2 - s^2}}, \qquad \sin\psi_i = \sqrt{\frac{S^2 - \sigma_i^2}{S^2 - s^2}},$$
+        $$\cos\phi_i = \frac{S\cos\psi_i}{\sigma_i}, \qquad \sin\phi_i = \frac{s\sin\psi_i}{\sigma_i}.$$
+        Observe that $\cos^2\phi_i + \sin^2\phi_i = \frac{S^2\cos^2\psi_i + s^2\sin^2\psi_i}{\sigma_i^2} = \frac{\sigma_i^2}{\sigma_i^2} = 1$, so the Givens rotation matrices $R(\phi_i) = \begin{pmatrix} \cos\phi_i & -\sin\phi_i \\ \sin\phi_i & \cos\phi_i \end{pmatrix}$ and $R(\psi_i)$ are orthogonal. Define
+        $$M_i = R(\phi_i) \begin{pmatrix} S & 0 \\ 0 & s \end{pmatrix} R(\psi_i)^T = \begin{pmatrix} \sigma_i & b_i \\ 0 & c_i \end{pmatrix},$$
+        where direct multiplication confirms the $(1,1)$-entry is $S\cos\phi_i\cos\psi_i + s\sin\phi_i\sin\psi_i = \sigma_i$, and the $(2,1)$-entry is $S\sin\phi_i\cos\psi_i - s\cos\phi_i\sin\psi_i = 0$. Since $M_i$ is orthogonally equivalent to $\operatorname{diag}(S, s)$, its singular values are precisely $S$ and $s$.</p>
+        <p>Now set $B = U \operatorname{diag}(b_1, \dots, b_n)$ and $C = \operatorname{diag}(c_1, \dots, c_n)$, and form
+        $$\tilde{A} = \begin{pmatrix} A & B \\ 0 & C \end{pmatrix} = \begin{pmatrix} U & 0 \\ 0 & I_n \end{pmatrix} \begin{pmatrix} \Sigma & \operatorname{diag}(b_i) \\ 0 & \operatorname{diag}(c_i) \end{pmatrix} \begin{pmatrix} V^* & 0 \\ 0 & I_n \end{pmatrix} \in M_{2n}(\mathbb{C}).$$
+        Up to a simultaneous permutation of rows and columns, the middle factor is $\bigoplus_{i=1}^n M_i$. Therefore $\tilde{A}$ has singular values $S$ and $s$ (each with multiplicity $n$), is invertible, and satisfies $\|\tilde{A}\| = S = \|A\|$ and $\|\tilde{A}^{-1}\| = s^{-1} = \|A^{-1}\|$.<span class="qed">$\blacksquare$</span></p>
+      </div>
+    </article>
+
+    <article class="problem">
+      <h2>Problem 6</h2>
+      <p class="prompt">Prove that the Frobenius norm is a matrix norm.</p>
+      <div class="solution clearfix">
+        <p>Recall $\|A\|_F = \left(\sum_{i,j=1}^n |a_{ij}|^2\right)^{1/2} = (\operatorname{tr}(A^* A))^{1/2}$. Under the canonical linear isomorphism $M_n(\mathbb{C}) \cong \mathbb{C}^{n^2}$, $\|\cdot\|_F$ is the Euclidean $\ell^2$-norm, so positive definiteness, homogeneity, and the triangle inequality hold immediately.</p>
+        <p><strong>Submultiplicativity (via Rademacher random vectors).</strong> Let $\varepsilon = (\varepsilon_1, \dots, \varepsilon_n)^T \in \{-1, 1\}^n$ be a random vector with independent uniform entries, so $\mathbb{E}[\varepsilon_j \varepsilon_k] = \delta_{jk}$. For any $X \in M_n(\mathbb{C})$,
+        $$\mathbb{E}[\|X\varepsilon\|_2^2] = \sum_{i=1}^n \sum_{j,k=1}^n x_{ij}\overline{x_{ik}}\,\mathbb{E}[\varepsilon_j\varepsilon_k] = \sum_{i,j=1}^n |x_{ij}|^2 = \|X\|_F^2.$$
+        Furthermore, the operator norm is dominated by the Frobenius norm because for any unit vector $u \in \mathbb{C}^n$, $\|Au\|_2^2 = u^* A^* A u \le \lambda_{\max}(A^* A) \le \operatorname{tr}(A^* A) = \|A\|_F^2$ (as $A^* A \ge 0$ has all nonnegative eigenvalues). Taking the supremum over $\|u\|_2 = 1$ gives $\|A\|^2 \le \|A\|_F^2$.</p>
+        <p>Applying the Rademacher identity to $X = AB$ and using the definition of the operator norm pointwise for every realization of $\varepsilon$, we obtain
+        $$\|AB\|_F^2 = \mathbb{E}[\|A(B\varepsilon)\|_2^2] \le \mathbb{E}[\|A\|^2 \|B\varepsilon\|_2^2] = \|A\|^2 \mathbb{E}[\|B\varepsilon\|_2^2] = \|A\|^2 \|B\|_F^2 \le \|A\|_F^2 \|B\|_F^2.$$
+        Taking square roots yields $\|AB\|_F \le \|A\|_F \|B\|_F$.<span class="qed">$\blacksquare$</span></p>
+      </div>
+    </article>
+
+    <article class="problem">
+      <h2>Problem 7</h2>
+      <p class="prompt">Let $f : \mathbb{R} \to \mathbb{R}$ and write $f[A] = (f(a_{ij}))$. Suppose that $f[A]$ is positive semidefinite whenever $A$ is a real symmetric positive semidefinite matrix, of any size. Prove that $f$ is nondecreasing on $[0, \infty)$.</p>
+      <div class="solution clearfix">
+        <p><strong>Proof (via $3 \times 3$ circulant matrices and the Discrete Fourier Transform).</strong> Let $0 \le x \le y$, and consider the $3 \times 3$ real symmetric circulant matrix
+        $$A = C(y, x, x) = \begin{pmatrix} y & x & x \\ x & y & x \\ x & x & y \end{pmatrix}.$$
+        Let $\omega = e^{2\pi i / 3}$ and let $F_3 = \frac{1}{\sqrt{3}}\begin{pmatrix} 1 & 1 & 1 \\ 1 & \omega & \omega^2 \\ 1 & \omega^2 & \omega \end{pmatrix}$ be the unitary $3 \times 3$ Discrete Fourier Transform matrix. Because $A$ is circulant, $F_3^* A F_3 = \operatorname{diag}(y + 2x, \, y - x, \, y - x)$. Since $x \ge 0$ and $y \ge x$, all three eigenvalues are nonnegative, so $A$ is real symmetric positive semidefinite.</p>
+        <p>By hypothesis, the entrywise image
+        $$f[A] = C(f(y), f(x), f(x)) = \begin{pmatrix} f(y) & f(x) & f(x) \\ f(x) & f(y) & f(x) \\ f(x) & f(x) & f(y) \end{pmatrix}$$
+        is positive semidefinite. Evaluating its quadratic form at the vector $v = (1, -1, 0)^T$ (equivalently, inspecting the second Fourier eigenvalue of $f[A]$) gives
+        $$0 \le v^* f[A] v = 2\bigl(f(y) - f(x)\bigr).$$
+        Hence $f(x) \le f(y)$ whenever $0 \le x \le y$, proving that $f$ is nondecreasing on $[0, \infty)$.<span class="qed">$\blacksquare$</span></p>
+      </div>
+    </article>
+
+    <article class="problem">
+      <h2>Problem 8</h2>
+      <p class="prompt">Let $r > 1$, and set $\mathbb{A}_r = \{z \in \mathbb{C} : r^{-1} < |z| < r\}$, $\mathbb{D} = \{z \in \mathbb{C} : |z| < 1\}$. Show that there exist an invertible matrix $T$ and a rational function $f : \mathbb{A}_r \to \mathbb{D}$ with all poles outside $\mathbb{A}_r$ such that $\|T\| < r$, $\|T^{-1}\| < r$, and $\|f(T)\| > 1$.</p>
+      <div class="solution clearfix">
+        <p><strong>Proof (via a $\pi/4$-rotated Jordan block).</strong> Let $\zeta = e^{i\pi/4}$. For $t > 0$, define the invertible $2 \times 2$ matrix
+        $$T = \zeta \begin{pmatrix} 1 & t \\ 0 & 1 \end{pmatrix}, \qquad T^{-1} = \bar{\zeta} \begin{pmatrix} 1 & -t \\ 0 & 1 \end{pmatrix}.$$
+        Since $|\zeta| = 1$ and $T^{-1}$ is unitarily equivalent to $\bar{\zeta}^2 T$ via $\operatorname{diag}(1, -1)$, we have $\|T\| = \|T^{-1}\|$. The characteristic polynomial of $T^* T = \begin{pmatrix} 1 & t \\ t & 1 + t^2 \end{pmatrix}$ is $\lambda^2 - (2 + t^2)\lambda + 1 = 0$, giving
+        $$\|T\| = \|T^{-1}\| = \frac{t + \sqrt{t^2 + 4}}{2}.$$
+        A direct rearrangement shows $\|T\| < r \iff \sqrt{t^2 + 4} < 2r - t \iff t < r - r^{-1}$. Thus any $t \in (0, r - r^{-1})$ satisfies $\|T\| < r$ and $\|T^{-1}\| < r$.</p>
+        <p>For each integer $n \ge 1$, define the rational function
+        $$f_n(z) = \frac{(\bar{\zeta} z)^n - (\zeta z^{-1})^n}{r^n + r^{-n}}.$$
+        Its only poles are at $0$ and $\infty$, both outside $\mathbb{A}_r$. On the boundary $\partial \mathbb{A}_r = \{|z| = r\} \cup \{|z| = r^{-1}\}$, the triangle inequality gives $|f_n(z)| \le \frac{|z|^n + |z|^{-n}}{r^n + r^{-n}} = 1$. Since $f_n$ is nonconstant and analytic on $\mathbb{A}_r$, the maximum modulus principle implies $f_n(\mathbb{A}_r) \subset \mathbb{D}$.</p>
+        <p>Writing $T = \zeta I + \zeta t N$ with $N^2 = 0$, we compute $f_n(\zeta) = 0$ and $f_n'(\zeta) = \frac{2n\bar{\zeta}}{r^n + r^{-n}}$, so
+        $$f_n(T) = f_n(\zeta) I + \zeta t f_n'(\zeta) N = \begin{pmatrix} 0 & \frac{2nt}{r^n + r^{-n}} \\ 0 & 0 \end{pmatrix}, \qquad \|f_n(T)\| = \frac{2nt}{r^n + r^{-n}}.$$
+        Set $x = \ln r > 0$, so $\frac{2n(r - r^{-1})}{r^n + r^{-n}} = \frac{2n\sinh x}{\cosh(nx)}$.
+        <ul>
+          <li>If $x \ge 1$, choose $n = 1$: then $\frac{2\sinh x}{\cosh x} = 2\tanh x \ge 2\tanh(1) > 1.5 > 1$.</li>
+          <li>If $0 < x < 1$, choose $n = \lceil 1/x \rceil$, so $1 \le nx < 2$. Since $\sinh x > x$, we have $\frac{2n\sinh x}{\cosh(nx)} > \frac{2nx}{\cosh(nx)}$. On $[1, 2]$, the function $g(u) = \frac{2u}{\cosh u}$ is unimodal with a unique maximum (where $u\tanh u = 1$), so its minimum occurs at an endpoint: $g(1) = \frac{2}{\cosh 1} \approx 1.296 > 1$ and $g(2) = \frac{4}{\cosh 2} \approx 1.063 > 1$.</li>
+        </ul>
+        In either case, $\frac{2n(r - r^{-1})}{r^n + r^{-n}} > 1$. Choosing $t \in (0, r - r^{-1})$ sufficiently close to $r - r^{-1}$ therefore yields $\|T\| < r$, $\|T^{-1}\| < r$, and $\|f_n(T)\| > 1$.<span class="qed">$\blacksquare$</span></p>
+      </div>
+    </article>
+
+    <footer>
+      Matrix Analysis &middot; Practice Review Solutions
+    </footer>
+  </main>
+</body>
+</html>
